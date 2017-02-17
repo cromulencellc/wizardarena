@@ -1,0 +1,46 @@
+%h1 Enablements
+
+%h2 Ranger
+= form_for @conn, enablement_path(@conn, :update, "ranger"), [as: :ranger, data_replacement_ranger: true, method: :patch], fn(f) ->
+  = select(f, :challenge_set_id, @cset_picker, [value: @selected_cset])
+  = label(f, :start_round, "start")
+  = number_input(f, :start_round)
+  to
+  = label(f, :end_round, "end")
+  = number_input(f, :end_round)
+  = select(f, :choice, ["disable", "enable"])
+  = submit "set range"
+  - end
+
+%table#replacement_ranger_grid
+  %thead
+    %tr
+      %th round
+      - for challenge_set <- @challenge_sets do
+        - cset = challenge_set.id
+        %th{"data-cset" => cset}
+          = challenge_set.shortname
+  %tbody
+    - for {round, row} <- Enum.zip(@rounds, @grid) do
+      - round_id = round.id
+      - frozen = round.started_at
+      - if frozen do
+        %tr
+          %th
+            = round.id
+            frozen
+          - for col <- row do
+            - klass = enable_klass(col.enabled)
+            %td{"class" => klass}
+              = col.enabled
+      - else
+        %tr{"data-round" => round_id}
+          %th
+            = round.id
+            = link "start", to: "#", data: [start: round.id]
+            = link "end", to: "#", data: [end: round.id]
+          - for col <- row do
+            - cset = col.cset
+            - klass = enable_klass(col.enabled)
+            %td{"data-cset" => cset, "class" => klass}
+              = col.enabled

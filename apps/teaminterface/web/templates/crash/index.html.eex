@@ -1,0 +1,59 @@
+<h1>Listing crashes</h1>
+
+<div class="utils">
+  <div class="pages">
+    <h2>Pages</h2>
+    <%= pagination_links @conn, @pagination, [], @symbolized_params %>
+  </div>
+
+  <div class="filters">
+    <h2>
+      Filters
+      <%= link "clear", to: crash_path(@conn, :index), class: "clear" %>
+    </h2>
+    <%= filter_explainer @conn, @conn.params %>
+  </div>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>rnd</th>
+      <th>Team</th>
+      <th>Challenge set</th>
+      <th>Challenge binary</th>
+      <th>Signal</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for crash <- @crashes do %>
+    <tr>
+      <td><%= crash.round_id %></td>
+      <td>
+        <%= link crash.team.shortname, to: team_path(@conn, :show, crash.team) %>
+        <%= query @conn, "\u2208", team_id: crash.team.id %>
+        <%= query @conn, "\u2209", not_team_id: crash.team.id %>
+      </td>
+      <td>
+        <%= link crash.challenge_set.shortname, to: challenge_set_path(@conn, :show, crash.challenge_set) %>
+        <%= query @conn, "\u2208", challenge_set_id: crash.challenge_set.id %>
+        <%= query @conn, "\u2209", not_challenge_set_id: crash.challenge_set.id %>
+      </td>
+      <td>
+        <%= link cbid(crash.challenge_binary, crash.challenge_set), to: challenge_binary_path(@conn, :show, crash.challenge_binary) %>
+        <%= query @conn, "\u2208", challenge_binary_id: crash.challenge_binary.id %>
+        <%= query @conn, "\u2209", not_challenge_binary_id: crash.challenge_binary.id %>
+      </td>
+      <td class="data"><%= crash.signal %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: crash_path(@conn, :show, crash), class: "btn btn-default btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New crash", to: crash_path(@conn, :new) %>

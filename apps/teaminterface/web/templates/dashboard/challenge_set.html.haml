@@ -1,0 +1,115 @@
+.challenge_set
+  %h1= @cset.shortname
+  %h2= @cset.name
+
+  %nav
+    %ul
+      %li
+        = link to: dashboard_path(@conn, :cb_feedbacks, csid(@cset)) do
+          CB Feedbacks
+          - end
+        Is your implementation crashing?
+      %li
+        = link to: dashboard_path(@conn, :poll_feedbacks, csid(@cset)) do
+          Poll Feedbacks
+          - end
+        Does your implementation work?
+      %li
+        = link to: dashboard_path(@conn, :proof_feedbacks, csid(@cset)) do
+          PoV Feedbacks
+          - end
+        Are your PoVs succeeding?
+
+
+  .parts
+    .binaries
+      %h2 Challenge Binaries
+      %table
+        %thead
+          %tr
+            %th cbid
+            %th index
+            %th actions
+        %tbody
+          - for cb <- @binaries do
+            %tr
+              %td.data= cbid(cb, @cset)
+              %td.data= cb.index
+              %td
+                = link to: dashboard_path(@conn, :challenge_binary, cbid(cb, @cset)) do
+                  details
+                  - end
+    .povs
+      %h2 Live PoVs
+      %table
+        %thead
+          %tr
+            %th round
+            %th target
+            %th throws
+            %th digest
+            %th actions
+        %tbody
+          - for pov <- @povs do
+            %tr
+              %td= pov.round_id
+              %td= team pov.target
+              %td= pov.throws
+              %td= digest pov.digest
+              %td= link "details", to: dashboard_path(@conn, :proof, pov.id)
+
+    .firewalls
+      %h2 Firewalls
+      %table
+        %thead
+          %tr
+            %th round
+            %th team
+            %th digest
+            %th actions
+        %tbody
+          - if @pending_firewall do
+            %tr
+              %td{colspan: 4}
+                %h3 Pending
+            %tr
+              %td= @pending_firewall.round_id
+              %td= team @pending_firewall.team
+              %td= digest @pending_firewall.digest
+              %td
+                = link "download", to: dashboard_path(@conn, :get_ids, @pending_firewall.id)
+                = link("details", to: dashboard_path(@conn, :firewall, @pending_firewall.id))
+          %tr
+            %td{colspan: 4}
+              %h3 Live
+          - for firewall <- @firewalls do
+            %tr
+              %td= firewall.round_id
+              %td= team(firewall.team)
+              %td= digest(firewall.digest)
+              %td
+                = link "download", to: dashboard_path(@conn, :get_ids, firewall.id)
+                = link("details", to: dashboard_path(@conn, :firewall, firewall.id))
+
+  .replace
+    .proof
+      = form_for @conn, dashboard_path(@conn, :replace_pov), [as: :proof, multipart: true], fn(f) ->
+        = hidden_input(f, :csid, value: @cset.shortname)
+        %h2 Submit Proof of Vulnerability:
+        %p
+          = label(f, :target_id, "Target:")
+          = select(f, :target_id, @teams)
+        %p
+          = label(f, :throws, "Throws:")
+          = number_input(f, :throws, min: 1, max: 10, step: 1, value: 1)
+        %p
+          = label(f, :pov, "PoV file:")
+          = file_input(f, :pov)
+        %p= submit "Submit"
+        - end
+    .firewall
+      = form_for @conn, dashboard_path(@conn, :replace_ids, @cset.shortname), [as: :firewall, multipart: true], fn(f) ->
+        %h2 Upload Firewall:
+        = file_input f, :ids
+        = submit "Replace"
+        - end

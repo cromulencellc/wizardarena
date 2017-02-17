@@ -1,0 +1,50 @@
+<h2>Listing pollers</h2>
+
+<div class="utils">
+  <div class="pages">
+    <h2>Pages</h2>
+    <%= pagination_links @conn, @pagination, [], @symbolized_params %>
+  </div>
+
+  <div class="filters">
+    <h2>
+      Filters
+      <%= link "clear", to: poller_path(@conn, :index), class: "clear" %>
+    </h2>
+    <%= filter_explainer @conn, @conn.params %>
+  </div>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>Round</th>
+      <th>Challenge set</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for poller <- @pollers do %>
+    <tr>
+      <td><%= poller.id %></td>
+      <td>
+        <%= poller.round_id %>
+        <%= query @conn, "\u2208", round_id: poller.round_id %>
+        <%= query @conn, "\u2209", not_round_id: poller.round_id %>
+      </td>
+      <td>
+        <%= poller.challenge_set.shortname %>
+
+        <%= query @conn, "\u2208", challenge_set_id: poller.challenge_set.id %>
+        <%= query @conn, "\u2209", not_challenge_set_id: poller.challenge_set.id %>
+      </td>
+
+      <td class="text-right">
+        <%= link "Show", to: poller_path(@conn, :show, poller), class: "btn btn-default btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>

@@ -1,0 +1,19 @@
+.scoreboard
+  %h1 Scoreboard
+  %table
+    %thead
+      %tr
+        %th.place place
+        %th.score score
+        %th.team team
+    - for score_row <- @scores do
+      %tr
+        %td.place= score_row["place"]
+        %td.score= score(score_row["score"])
+        %td.team
+          = score_row["team"].name
+
+:javascript
+  setTimeout(function(){
+    window.location.reload(1);
+  }, 60000);

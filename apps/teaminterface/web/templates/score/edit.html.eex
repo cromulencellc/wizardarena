@@ -1,0 +1,6 @@
+<h2>Edit score</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: score_path(@conn, :update, @score) %>
+
+<%= link "Back", to: score_path(@conn, :index) %>

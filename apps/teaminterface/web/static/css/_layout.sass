@@ -1,0 +1,48 @@
+body
+  background-color: $background_color
+  color: $lefty
+  margin-top: 0
+
+header
+  @include outer-container
+  background-color: $lefty
+  color: $background_color
+  padding: 0.25em
+  $size: 1.8vh
+  h1.title
+    @include span-columns(3)
+    font-size: $size
+    margin-top: 0
+    margin-bottom: 0
+  nav
+    @include span-columns(3)
+    @include omega
+    text-align: right
+    font-size: $size
+    ul
+      margin-top: 0
+      margin-bottom: 0
+      padding-left: 0
+      list-style-type: none
+      li
+        display: inline-block
+        a
+          &:link, &:visited
+            color: $shirt
+  div
+    @include span-columns(3)
+    font-size: $size
+    text-align: center
+
+
+#content
+  @include outer-container
+
+  p.alert
+    border: 1px solid $lefty
+    border-left-width: 4px
+    border-radius: 0.5em
+    padding: 0.5em
+    &.alert-danger
+      border-color: red
+      background-color: lighten(red, 40%)

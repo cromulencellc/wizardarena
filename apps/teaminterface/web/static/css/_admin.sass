@@ -1,0 +1,70 @@
+body.admin
+  header
+    background-color: #800
+    div
+      @include span-columns(2)
+      text-align: left
+    nav
+      @include span-columns(10)
+      text-align: right
+      ul li
+        a:link, a:visited
+          border-color: $shirt
+
+
+  #content
+    table
+      thead
+        tr
+          th
+            border-bottom: 1px solid $lefty
+            &.empty
+              border-bottom: 0px
+      td
+        .digest
+          margin-left: 0.5em
+          border-bottom: 0px
+      .data
+        font-family: $mono_font
+
+  .form-group
+    label
+      display: inline-block
+      width: 10em
+
+  #replacement_ranger_grid
+    .enabled, .highlit.enabled
+      background-color: #cec
+    .highlit
+      background-color: #ffc
+    .highlit .enabled
+      background-color: #efc
+    .highlit .highlit
+      background-color: #fcc
+
+  nav
+    ul
+      lsit-style-type: none
+      padding-left: 0
+      li
+        display: inline-block
+        a
+          border: 1px solid $link_color
+          padding: 2px
+          text-decoration: none
+  .utils
+    > div
+      h2
+        margin: 0
+        display: inline-block
+      nav
+        display: inline-block
+    .filters
+      a.clear
+        font-size: 0.75em
+      ul
+        margin-top: 0
+        padding-left: 0
+        li
+          a:link, a:visited
+            margin-right: 0.25em

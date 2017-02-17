@@ -1,0 +1,38 @@
+!!! 5
+%html(lang="en")
+  %head
+    %meta(charset="utf-8")
+    %meta(http-equiv="X-UA-Compatible" content="IE=edge")
+    %meta(name="viewport" content="width=device-width, initial-scale=1")
+    %meta(name="description" content="")
+    %meta(name="author" content="")
+
+    %link(rel="icon" href="/images/favicon.png" type="image/png")
+
+    %title= title assigns
+    %link{rel: "stylesheet", href: "#{static_path(@conn, "/css/app.css")}"}
+
+  %body{class: "#{body_class(@conn)} admin"}
+    %header
+      #countdown= round
+      %nav
+        %ul
+          %li= link("Crashes", to: crash_path(@conn, :index))
+          %li= link("Enablements", to: enablement_path(@conn, :index))
+          %li= link("Firewalls", to: firewall_path(@conn, :index))
+          %li= link("Poll feedbacks", to: poll_feedback_path(@conn, :index))
+          %li= link("Proofs", to: proof_path(@conn, :index))
+          %li= link("Proof feedbacks", to: proof_feedback_path(@conn, :index))
+          %li= link("Replacements", to: replacement_path(@conn, :index))
+          %li= link("Scores", to: score_path(@conn, :index))
+          %li= link("Teams", to: team_path(@conn, :index))
+    #content
+      - if get_flash(@conn, :info) do
+        %p.alert.alert-info(role="alert")= get_flash(@conn, :info)
+      - if get_flash(@conn, :error) do
+        %p.alert.alert-danger(role="alert")= get_flash(@conn, :error)
+
+      %main(role="main")
+        = render @view_module, @view_template, assigns
+
+    %script{src: "#{static_path(@conn, "/js/app.js")}", type: 'text/javascript'}

@@ -1,0 +1,18 @@
+<h2>Show challenge set alias</h2>
+
+<ul>
+
+  <li>
+    <strong>Challenge set:</strong>
+    <%= @challenge_set_alias.challenge_set_id %>
+  </li>
+
+  <li>
+    <strong>Cgc:</strong>
+    <%= @challenge_set_alias.cgc_id %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: challenge_set_alias_path(@conn, :edit, @challenge_set_alias) %>
+<%= link "Back", to: challenge_set_alias_path(@conn, :index) %>

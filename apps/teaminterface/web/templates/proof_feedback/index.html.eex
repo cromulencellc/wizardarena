@@ -1,0 +1,81 @@
+<h1>Listing proof feedbacks</h1>
+
+<div class="utils">
+  <div class="pages">
+    <h2>Pages</h2>
+    <%= pagination_links @conn, @pagination, [], @symbolized_params %>
+  </div>
+
+  <div class="filters">
+    <h2>
+      Filters
+      <%= link "clear", to: proof_feedback_path(@conn, :index), class: "clear" %>
+    </h2>
+    <%= filter_explainer @conn, @conn.params %>
+  </div>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>rnd</th>
+      <th>Challenge set</th>
+      <th>Proof</th>
+      <th>Digest</th>
+      <th>Team</th>
+      <th>Target</th>
+      <th>Throw</th>
+      <th>Successful</th>
+      <th>Error</th>
+      <th>Signal</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for proof_feedback <- @proof_feedbacks do %>
+    <tr>
+      <td><%= proof_feedback.round_id %></td>
+      <td>
+        <%= link proof_feedback.challenge_set.shortname, to: challenge_set_path(@conn, :show, proof_feedback.challenge_set.id) %>
+        <%= query @conn, "\u2208", challenge_set_id: proof_feedback.challenge_set.id %>
+        <%= query @conn, "\u2209", not_challenge_set_id: proof_feedback.challenge_set.id %>
+      </td>
+      <td>
+        <%= link to: proof_path(@conn, :show, proof_feedback.proof) do %>
+          <%= proof_feedback.proof_id %>
+        <% end %>
+        <%= query @conn, "\u2208", proof_id: proof_feedback.proof_id %>
+        <%= query @conn, "\u2209", not_proof_id: proof_feedback.proof_id %>
+      </td>
+      <td>
+        <%= link digest(proof_feedback.proof.digest), to: proof_path(@conn, :index, digest: proof_feedback.proof.digest) %>
+        <%= query @conn, "\u2208", digest: proof_feedback.proof.digest %>
+        <%= query @conn, "\u2209", not_digest: proof_feedback.proof.digest %>
+      </td>
+      <td>
+        <%= link proof_feedback.team.shortname, to: team_path(@conn, :show, proof_feedback.team) %>
+        <%= query @conn, "\u2208", team_id: proof_feedback.team.id %>
+        <%= query @conn, "\u2209", not_team_id: proof_feedback.team.id %>
+      </td>
+      <td>
+        <%= link proof_feedback.target.shortname, to: team_path(@conn, :show, proof_feedback.target) %>
+        <%= query @conn, "\u2208", target_id: proof_feedback.target.id %>
+        <%= query @conn, "\u2209", not_target_id: proof_feedback.target.id %>
+      </td>
+      <td><%= proof_feedback.throw %></td>
+      <td class="data">
+        <%= proof_feedback.successful %>
+        <%= query @conn, "\u2208", successful: proof_feedback.successful %>
+        <%= query @conn, "\u2209", successful: !proof_feedback.successful %>
+      </td>
+      <td class="data"><%= proof_feedback.error %></td>
+      <td class="data"><%= proof_feedback.signal %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: proof_feedback_path(@conn, :show, proof_feedback), class: "btn btn-default btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>

@@ -1,0 +1,40 @@
+.challenge_binary
+  %h1
+    Challenge Binary
+    = cbid(@cb, @cset)
+  %h2= link(to: dashboard_path(@conn, :challenge_set, @cset.shortname)) do
+    Challenge Set
+    = @cset.shortname
+    - end
+
+  .versions
+    %h2 Replacements
+    %table
+      %thead
+        %tr
+          %th team
+          %th round
+          %th digest
+          %th size
+          %th actions
+      %tbody
+        - for replacement <- @versions do
+          %tr
+            %td= team replacement.team
+            %td= link("round #{replacement.round_id}", to: dashboard_path(@conn, :round, replacement.round_id))
+            %td= digest replacement.digest
+            %td= replacement.size
+            %td
+              = link("download", to: dashboard_path(@conn, :get_rcb, replacement.id))
+              = link("details", to: dashboard_path(@conn, :replacement, replacement.id))
+
+  .replace
+    = form_for @conn, dashboard_path(@conn, :replace_rcb, cbid(@cb, @cset)), [as: :replacement, multipart: true], fn(f) ->
+      %h2 Upload new replacement:
+      %p.note
+        Replacing one or more challenge binaries will cause one round of
+        downtime. Un-replace a challenge binary by uploading the previous
+        version.
+      %p= file_input f, :rcb
+      %p= submit "Replace"
+      - end

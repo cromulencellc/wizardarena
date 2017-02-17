@@ -1,0 +1,124 @@
+.round
+  %h1= "Round #{@round.id}"
+  .all_rounds= link "all rounds", to: dashboard_path(@conn, :rounds)
+  %dl
+    %dt Started at
+    %dd= shift_ago(@round.started_at)
+    %dt Finished at
+    %dd= shift_ago(@round.finished_at)
+
+
+  - if is_nil(@round.finished_at) do
+    %p.note
+      Round isn't finished, only showing your team's submissions.
+
+  .replacements
+    %h2 Replacements
+    %table
+      %thead
+        %tr
+          %th cbid
+          %th team
+          %th digest
+          %th size
+          %th actions
+      %tbody
+        - for replacement <- @replacements do
+          %tr
+            %td= link(cbid(replacement), to: dashboard_path(@conn, :challenge_binary, cbid(replacement)))
+            %td= team replacement.team
+            %td= digest replacement.digest
+            %td= replacement.size
+            %td
+              download
+              details
+  .firewalls
+    %h2 Firewalls
+    %table
+      %thead
+        %tr
+          %th csid
+          %th team
+          %th digest
+          %th actions
+      %tbody
+        - for firewall <- @firewalls do
+          %tr
+            %td= link(csid(firewall), to: dashboard_path(@conn, :challenge_set, csid(firewall)))
+            %td= team firewall.team
+            %td= digest firewall.digest
+            %td
+              download
+              details
+.round
+  .poll_feedbacks
+    %h2 Poll Feedbacks
+    %table
+      %thead
+        %tr
+          %th &nbsp
+          %th.group{colspan: 5}
+            statuses
+          %th.group{colspan: 2}
+            performance
+        %tr
+          %th cset
+          %th success
+          %th timeout
+          %th functionality
+          %th connect
+          %th bad
+          %th time
+          %th memory
+      %tbody.data
+        - for %{"csid" => csid, "functionality" => func, "performance" => perf} <- @poll_feedbacks do
+          %tr
+            %td= link csid, to: dashboard_path(@conn, :challenge_set, csid)
+            %td= Map.get(func, "success", 0)
+            %td= Map.get(func, "timeout", 0)
+            %td= Map.get(func, "function", 0)
+            %td= Map.get(func, "connect", 0)
+            %td= Map.get(func, "unknown", 0)
+            %td= Float.round(perf["time"], 3)
+            %td= Float.round(perf["memory"], 3)
+
+.round
+  .cb_feedbacks
+    %h2 CB Feedbacks
+    %table
+      %thead
+        %tr
+          %th cset
+          %th cb
+          %th signal
+          %th timestamp
+      %tbody.data
+        - for crash <- @crashes do
+          - cset = crash.challenge_set.shortname
+          - cbid = cbid(crash.challenge_binary, crash.challenge_set)
+          %tr
+            %td= link cset, to: dashboard_path(@conn, :challenge_set, cset)
+            %td= link cbid, to: dashboard_path(@conn, :challenge_binary, cbid)
+            %td= crash.signal
+            %td= DateTime.to_unix crash.timestamp
+
+  .proof_feedbacks
+    %h2 PoV Feedbacks
+    %table
+      %thead
+        %tr
+          %th cset
+          %th target
+          %th PoV
+          %th throw
+          %th success
+      %tbody.data
+        - for pf <- @proof_feedbacks do
+          %tr
+            %td= link pf.challenge_set.shortname, to: dashboard_path(@conn, :challenge_set, pf.challenge_set.shortname)
+            %td= team pf.target
+            %td= link to: dashboard_path(@conn, :proof, pf.proof_id) do
+              = digest pf.proof.digest
+              - end
+            %td= pf.throw
+            %td= pf.successful

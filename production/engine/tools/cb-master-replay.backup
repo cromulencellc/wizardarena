@@ -1,0 +1,197 @@
+#!/usr/bin/env python
+
+""" CB MASTER REPLAY
+
+Contains elements of CB-REPLAY and CB-REPLAY-POV
+
+"""
+
+import threading
+import glob
+import os
+import argparse
+import struct
+import subprocess
+import random
+import xml.etree.ElementTree as ET
+import prf
+import binascii
+
+MAX_THROWS = 10
+
+class ReplayProcess(object):
+    def __init__( self, cmd ):
+        self.cmd = cmd
+        self.process = None
+
+    def RunProcess( self, timeout ):
+        def target():
+            self.process = subprocess.Popen( self.cmd, shell=False )
+            (self.process_stdout, self.process_stderr) = self.process.communicate()
+            self.process_returncode = self.process.returncode
+
+        thread = threading.Thread(target=target)
+        thread.start()
+
+        thread.join( timeout )
+        if thread.is_alive():
+            self.process.terminate()
+            thread.join()
+
+
+def main():
+    """ Parse and Throw the POVs """
+    parser = argparse.ArgumentParser(description='Run cb-replay or cb-replay-pov on a directory based on file type of directory')
+    required = parser.add_argument_group(title='required arguments')
+    required.add_argument('--host', required=True, type=str,
+                          help='IP address of CB server')
+    required.add_argument('--port', required=True, type=int,
+                          help='PORT of the listening CB')
+    required.add_argument('--directory', required=True, type=str, 
+                          help='Directory containing XML and POV files')
+    required.add_argument('--throws', required=True, type=int,
+                          help='Maximum number of throws to send POV')
+    required.add_argument('--round_seed', required=True, type=str,
+                          help='Random string used for PRF expansion')
+    required.add_argument('--round_secret', required=True, type=str,
+                          help='Used as input for round secret')
+    required.add_argument('--round_label', required=True, type=str,
+                          help='Used as input for label for PRF expansion')
+    """ 
+    parser.add_argument('--source_host', required=False, type=str, default='',
+                        help='Source IP address to use in connections')
+    parser.add_argument('--source_port', required=False, type=int,
+                        default=0, help='Source port to use in connections')
+    parser.add_argument('--concurrent', required=False, type=int, default=1,
+                        help='Number of Polls/POVs to throw concurrently')
+    parser.add_argument('--timeout', required=False, type=int, default=None,
+                        help='Connect timeout')
+    parser.add_argument('--failure_ok', required=False, action='store_true',
+                        default=False,
+                        help='Failures for this test are accepted')
+    parser.add_argument('--debug', required=False, action='store_true',
+                        default=False, help='Enable debugging output')
+    parser.add_argument('--max_send', required=False, type=int,
+                        help='Maximum amount of data in each send call')
+    parser.add_argument('--negotiate', required=False, action='store_true',
+                        default=False, help='The CB seed should be negotiated')
+    parser.add_argument('--cb_seed', required=False, type=str,
+                        help='Specify the CB Seed')
+    """
+    args = parser.parse_args()
+
+    if ( args.throws < 1 or args.throws > MAX_THROWS ):
+        raise Exception('Throws allowed is 1-%d' % MAX_THROWS)
+
+    pov_throw_count = args.throws
+
+    try:
+        round_secret = binascii.unhexlify( args.round_secret )
+    except binascii.Error:
+        raise Exception('Round secret must be a hex string')
+    except binascii.Incomplete:
+        raise Exception('Round secret must be a hex string')
+
+    if ( len(round_secret) < 48 ):
+        raise Exception('Round secret must be 48-bytes or larger')
+
+    try:
+        round_seed = binascii.unhexlify( args.round_seed )
+    except binascii.Error:
+        raise Exception('Round seed must be a hex string')
+    except binascii.Incomplete:
+        raise Exception('Rounds eed must be a hex string')
+
+    if ( len(round_seed) != 32 ):
+        raise Exception('Round seed must be 32-bytes')
+
+    # Get all files in a directory that are .XML or .POV
+    file_list = []
+    for xml_file in glob.glob( args.directory + "/*.[xX][mM][lL]" ):
+        file_list.append( { "Name" : xml_file, "Type" : "xml" } )
+
+    file_list = sorted( file_list, key=lambda k: k['Name'] )
+
+    pov_count = 0
+    pov_list = []
+    for pov_file in glob.glob( args.directory + "/*.[pP][oO][vV]" ):
+        pov_count += 1
+
+        pov_list.append( { "Name" : pov_file, "Type" : "pov" } )
+
+
+    if ( pov_count > 1 ):
+        print "More than one POV found, using first POV only!"
+       
+    pov_list = sorted( pov_list, key=lambda k: k['Name'] )
+
+    throw_list = []
+    for xml_file in file_list:
+        throw_list.append( xml_file )
+
+    for pov_item in pov_list:
+        throw_list.append( pov_item )
+        pov_item_count += 1
+
+        break
+
+    if ( len(throw_list) == 0 ):
+        raise Exception("No items to replay")
+
+    prf_data_length = (48 * len(throw_list)) + 4
+    print "PRF Data Length: %d\n" % prf_data_length
+
+    prf_random_data = prf.HKDF_HMAC_SHA512( round_secret, args.round_label + round_seed, prf_data_length )
+
+    random_order_seed = struct.unpack( 'L', prf_random_data[0:4] )[0]
+
+    print "Random order seed is: %08X\n" % random_order_seed
+    
+    # Seed random number generator with seed (generate predictable ordering)
+    random.seed( random_order_seed )
+   
+    # Build the throw index list
+    throw_index_list = range( len(throw_list) )
+
+    random.shuffle( throw_index_list )
+
+    cb_seed_pos = 4
+    # Generate 
+    try:
+        for item_idx in throw_index_list:
+            pov_item = throw_list[item_idx]
+
+
+            if ( pov_item['Type'] == 'pov' ):
+                # Run cb-replay-pov
+                #print "cb-replay-pov: %s\n" % pov_item['Name']
+                #print "seed: %s\n" % binascii.hexlify( cb_seed )
+                print "cb_seed_pos: %d\n" % cb_seed_pos
+                cb_seed = prf_random_data[cb_seed_pos:cb_seed_pos+48]
+                
+                new_command = ReplayProcess( ("/usr/bin/cb-replay-pov --host %s --port %s --negotiate --cb_seed \"%s\" \"%s\"" % (args.host, args.port, binascii.hexlify(cb_seed), pov_item['Name'] ) ) )
+                new_command.RunProcess( timeout=15 )
+            
+                cb_seed_pos += 48
+
+            elif ( pov_item['Type'] == 'xml' ):
+                # Run cb-replay
+                print "cb-replay: %s\n" % pov_item['Name']
+
+                new_command = ReplayProcess( ("/usr/bin/cb-replay --host %s --port %s --negotiate \"%s\"" % (args.host, args.port, pov_item['Name']) ) )
+                new_command.RunProcess( timeout=15 )
+
+            else:
+                raise Exception("Unknown item type -- not POV or XML" )
+
+
+    except KeyboardInterrupt:
+        print "# Process keyboard interrupted"
+    finally:
+        print "Finally"
+
+
+    return 0
+
+if __name__ == "__main__":
+    exit( main() )

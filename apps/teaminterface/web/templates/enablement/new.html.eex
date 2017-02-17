@@ -1,0 +1,6 @@
+<h2>New enablement</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: enablement_path(@conn, :create) %>
+
+<%= link "Back", to: enablement_path(@conn, :index) %>

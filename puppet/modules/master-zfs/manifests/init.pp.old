@@ -1,0 +1,89 @@
+class master-zfs {
+	file { '/home/cromulence/zfs-files':
+		ensure => 'directory',
+		owner => '1000',
+		group => '1000',
+		mode => '0600',
+		require => User["cromulence"]
+	}~>
+	file { 'zfs-package-archive':
+		path => '/home/cromulence/zfs-files/zfs-package.tgz',
+		ensure => file,
+		owner => '0',
+		group => '0',
+		mode => '0644',
+		source => 'puppet:///modules/master-zfs/zfs-package.tgz',
+	}~>
+	exec { 'untar-zfs-package':
+		cwd => '/home/cromulence/zfs-files',
+		command => '/bin/tar xvf zfs-package.tgz'
+	}~>
+	exec { 'fix-dependencies':
+		cwd => '/home/cromulence',
+		command => '/usr/bin/apt-get -f install -y'
+	}~>
+	package { 'gcc':
+		name => 'gcc',
+		ensure => installed,
+	}~>
+	package { 'make':
+		name => 'make',
+		ensure => installed,
+		provider => 'dpkg',
+		source => '/home/cromulence/zfs-files/make_3.81-8.2ubuntu3_amd64.deb',
+	}~>
+	package { 'patch':
+		name => 'patch',
+		ensure => installed,
+		provider => 'dpkg',
+		source => '/home/cromulence/zfs-files/patch_2.7.1-4ubuntu2.3_amd64.deb',
+	}~>
+	package { 'dkms':
+		name => 'dkms',
+		ensure => installed,
+		provider => 'dpkg',
+		source => '/home/cromulence/zfs-files/dkms_2.2.0.3-1.1ubuntu5.14.04.5_all.deb',
+	}~>
+	package { 'zfs-doc':
+		name => 'zfs-doc',
+		ensure => installed,
+		provider => 'dpkg',
+		source => '/home/cromulence/zfs-files/zfs-doc_0.6.5.3-1~trusty_amd64.deb',
+	}~>
+	package { 'zfs-spl':
+		name => 'spl',
+		ensure => installed,
+		provider => 'dpkg',
+		source => '/home/cromulence/zfs-files/spl_0.6.5.3-1~trusty_amd64.deb'
+	}~>
+	package { 'zfs-spl-dkms':
+		name => 'spl-dkms',
+		ensure => installed,
+		provider => 'dpkg',
+		source => '/home/cromulence/zfs-files/spl-dkms_0.6.5.3-1~trusty_all.deb'
+	}~>
+	package { 'zfs-dkms':
+		name => 'zfs-dkms',
+		ensure => installed,
+		provider => 'dpkg',
+		source => '/home/cromulence/zfs-files/zfs-dkms_0.6.5.3-1~trusty_amd64.deb'
+	}~>
+	package { 'zfs-utils':
+		name => 'zfsutils',
+		ensure => installed,
+		provider => 'dpkg',
+		source => '/home/cromulence/zfs-files/zfsutils_0.6.5.3-1~trusty_amd64.deb'
+	}~>
+	package { 'zfs-package':
+		name => 'ubuntu-zfs',
+		ensure => installed,
+		provider => 'dpkg',
+		source => '/home/cromulence/zfs-files/ubuntu-zfs_8~trusty_amd64.deb',
+	}~>
+	zfs { 'storage-zfs-wa':
+		ensure => present,
+		quota => '80G',
+		compression => 'off',
+		mountpoint => '/wa_storage',
+	}
+}

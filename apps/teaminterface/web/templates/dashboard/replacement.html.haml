@@ -1,0 +1,41 @@
+.replacement
+  %h1
+    Replacement
+    = @replacement.id
+    for
+    = cbid(@cb, @cset)
+  %dl
+    %dt Challenge Binary
+    %dd= link to: dashboard_path(@conn, :challenge_binary, cbid(@cb, @cset)) do
+      = cbid(@cb, @cset)
+      - end
+    %dt Challenge Set
+    %dd= link to: dashboard_path(@conn, :challenge_set, @cset.shortname) do
+      = @cset.shortname
+      - end
+    %dt Team
+    %dd= link to: dashboard_path(@conn, :team, @team.id) do
+      = team(@team)
+      - end
+    %dt Digest
+    %dd= digest @replacement.digest
+    %dt Download
+    %dd= link to: dashboard_path(@conn, :get_rcb, @replacement.id) do
+      Download here
+      - end
+
+  %h2 Other appearances:
+  %table
+    %thead
+      %tr
+        %th round
+        %th team
+        %th digest
+        %th actions
+    %tbody
+      - for rep <- @similar do
+        %tr
+          %th= rep.round_id
+          %th= team(rep.team)
+          %th= digest(rep.digest)
+          %th= link("details", to: dashboard_path(@conn, :replacement, rep.id))

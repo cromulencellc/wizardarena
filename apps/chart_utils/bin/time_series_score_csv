@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+mkdir -p `dirname $0`/../tmp
+cat `dirname $0`/../src/time_series_score_csv.sql | psql $1

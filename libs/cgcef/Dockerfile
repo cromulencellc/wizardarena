@@ -1,0 +1,6 @@
+FROM elixir:1.2.3
+ENV APP_HOME /opt/cgcef
+
+WORKDIR $APP_HOME
+RUN mkdir -p $APP_HOME
+COPY . $APP_HOME

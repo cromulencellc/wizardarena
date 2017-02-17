@@ -1,0 +1,33 @@
+.poll_feedback
+  %h1
+    Poll Feedback for
+    = @cset.shortname
+
+  %table
+    %thead
+      %tr
+        %th &nbsp;
+        %th.group{colspan: 5}
+          statuses
+        %th.group{colspan: 2}
+          performance
+      %tr
+        %th round
+        %th success
+        %th timeout
+        %th functionality
+        %th connect
+        %th bad
+        %th time
+        %th memory
+    %tbody.data
+      - for %{"round_id" => round_id, "functionality" => func, "performance" => perf} <- @feedback do
+        %tr
+          %td= round_id
+          %td= Map.get(func, "success", 0)
+          %td= Map.get(func, "timeout", 0)
+          %td= Map.get(func, "function", 0)
+          %td= Map.get(func, "connect", 0)
+          %td= Map.get(func, "unknown", 0)
+          %td= Float.round(Map.get(perf, "time", 0.0) || 0.0, 3)
+          %td= Float.round(Map.get(perf, "memory", 0.0) || 0.0, 3)

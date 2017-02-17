@@ -1,0 +1,6 @@
+<h2>Edit crash</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: crash_path(@conn, :update, @crash) %>
+
+<%= link "Back", to: crash_path(@conn, :index) %>

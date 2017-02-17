@@ -1,0 +1,6 @@
+**/build
+**/bin
+**/poller/**/GEN_*.xml
+**/poller/**/*.png
+**/pov/*.pov
+.vagrant

@@ -1,0 +1,6 @@
+<h2>Edit round</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: round_path(@conn, :update, @round) %>
+
+<%= link "Back", to: round_path(@conn, :index) %>

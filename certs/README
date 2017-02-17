@@ -1,0 +1,30 @@
+OLD instructions:
+NOTE: This does not generate a validate server/client certificate which is required!
+
+Create a certificate instruction
+
+Sign a CSR with the CA Cert
+This CA cert is for the game host
+
+It will placed on all the machines to setup the chain of trust
+*** MAKE SURE to secure consul, docker agents, swarm manager, and private registry
+***** MIGHT WANT TO ADD Firewall rules to ensure everything is secured
+
+Steps to generate a new CERT (agent1 for instance)
+openssl genrsa -out agent1.key 2048
+openssl req -new -key agent1.key -out agent1.csr
+
+<<ENTER DATA make sure FQDN matches hostname of agent1>>
+
+openssl x509 -req -in agent1.csr -CA ca_cert/rootCA.pem -CAkey ca_cert/rootCA.key -CAcreateserial -out agent1.crt -days 365 -sha256
+
+Your new cert is created.
+Move it to the appropriate folders
+
+
+Creating the CA certificate:
+Create root key:
+openssl genrsa -out ca_cert/rootCA.key 2048
+
+Create self signed certificate
+openssl req -x509 -new -nodes -key ca_cert/rootCA.key -sha256 -days 1024 -out ca_cert/rootCA.crt

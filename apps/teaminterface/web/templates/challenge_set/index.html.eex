@@ -1,0 +1,28 @@
+<h2>Listing challenge sets</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Shortname</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for challenge_set <- @challenge_sets do %>
+    <tr>
+      <td><%= challenge_set.name %></td>
+      <td><%= challenge_set.shortname %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: challenge_set_path(@conn, :show, challenge_set), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: challenge_set_path(@conn, :edit, challenge_set), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: challenge_set_path(@conn, :delete, challenge_set), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New challenge set", to: challenge_set_path(@conn, :new) %>

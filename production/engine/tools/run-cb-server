@@ -1,0 +1,11 @@
+#!/bin/bash
+
+mkdir /mnt/ramdisk
+mount -t tmpfs -o size=500M tmpfs /mnt/ramdisk
+
+cd /mnt/cbsource/
+cp "${@:2}" /mnt/ramdisk/
+
+echo "cb-server -p $1 --negotiate --insecure -t 15 -l 1 -d /mnt/ramdisk ${@:2}"
+
+cb-server -p $1 --negotiate --insecure -t 15 -l 1 -d /mnt/ramdisk "${@:2}"

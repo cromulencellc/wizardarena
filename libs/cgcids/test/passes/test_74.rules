@@ -1,0 +1,1 @@
+alert (name:"test"; state:unset,foo_bar;)

@@ -1,0 +1,6 @@
+<h2>New replacement</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: replacement_path(@conn, :create) %>
+
+<%= link "Back", to: replacement_path(@conn, :index) %>

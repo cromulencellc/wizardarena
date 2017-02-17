@@ -1,0 +1,30 @@
+<h2>Listing challenge binaries</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Challenge set</th>
+      <th>Index</th>
+      <th>Size</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for challenge_binary <- @challenge_binaries do %>
+    <tr>
+      <td><%= challenge_binary.challenge_set_id %></td>
+      <td><%= challenge_binary.index %></td>
+      <td><%= challenge_binary.size %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: challenge_binary_path(@conn, :show, challenge_binary), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: challenge_binary_path(@conn, :edit, challenge_binary), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: challenge_binary_path(@conn, :delete, challenge_binary), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New challenge binary", to: challenge_binary_path(@conn, :new) %>

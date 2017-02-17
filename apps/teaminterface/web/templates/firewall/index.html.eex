@@ -1,0 +1,60 @@
+<h2>Listing firewalls</h2>
+
+<div class="utils">
+  <div class="pages">
+    <h2>Pages</h2>
+    <%= pagination_links @conn, @pagination, [], @symbolized_params %>
+  </div>
+
+  <div class="filters">
+    <h2>
+      Filters
+      <%= link "clear", to: replacement_path(@conn, :index), class: "clear" %>
+    </h2>
+    <%= filter_explainer @conn, @conn.params %>
+  </div>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Round</th>
+      <th>Team</th>
+      <th>Challenge set</th>
+      <th>Digest</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for firewall <- @firewalls do %>
+    <tr>
+      <td>
+        <%= link(firewall.round_id, to: round_path(@conn, :show, firewall.round_id)) %>
+        <%= query @conn, "\u2208", round_id: firewall.round_id %>
+        <%= query @conn, "\u2209", not_round_id: firewall.round_id %>
+      </td>
+      <td>
+        <%= link(firewall.team.shortname, to: team_path(@conn, :show, firewall.team)) %>
+        <%= query @conn, "\u2208", team_id: firewall.team.id %>
+        <%= query @conn, "\u2209", not_team_id: firewall.team.id %>
+      </td>
+      <td>
+        <%= link(firewall.challenge_set.shortname, to: challenge_set_path(@conn, :show, firewall.challenge_set)) %>
+
+        <%= query @conn, "\u2208", challenge_set_id: firewall.challenge_set.id %>
+        <%= query @conn, "\u2209", not_challenge_set_id: firewall.challenge_set.id %>
+      </td>
+      <td>
+        <%= digest firewall.digest %>
+        <%= query @conn, "\u2208", digest: firewall.digest %>
+        <%= query @conn, "\u2209", not_digest: firewall.digest %>
+      </td>
+
+      <td class="text-right">
+        <%= link "Show", to: firewall_path(@conn, :show, firewall), class: "btn btn-default btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>

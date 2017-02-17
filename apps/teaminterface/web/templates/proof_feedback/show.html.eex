@@ -1,0 +1,38 @@
+<h2>Show proof feedback</h2>
+
+<ul>
+
+  <li>
+    <strong>Proof:</strong>
+    <%= @proof_feedback.proof_id %>
+  </li>
+
+  <li>
+    <strong>Round:</strong>
+    <%= @proof_feedback.round_id %>
+  </li>
+
+  <li>
+    <strong>Throw:</strong>
+    <%= @proof_feedback.throw %>
+  </li>
+
+  <li>
+    <strong>Successful:</strong>
+    <%= @proof_feedback.successful %>
+  </li>
+
+  <li>
+    <strong>Error:</strong>
+    <%= @proof_feedback.error %>
+  </li>
+
+  <li>
+    <strong>Signal:</strong>
+    <%= @proof_feedback.signal %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: proof_feedback_path(@conn, :edit, @proof_feedback) %>
+<%= link "Back", to: proof_feedback_path(@conn, :index) %>

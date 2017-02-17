@@ -1,0 +1,33 @@
+<h2>Listing teams</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Shortname</th>
+      <th>Displayname</th>
+      <th>Color</th>
+      <th>Score</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for team <- @teams do %>
+    <tr>
+      <td><%= team.name %></td>
+      <td><%= team.shortname %></td>
+      <td><%= team.displayname %></td>
+      <td><%= team.color %></td>
+      <td><%= score(team) %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: team_path(@conn, :show, team), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: team_path(@conn, :edit, team), class: "btn btn-default btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New team", to: team_path(@conn, :new) %>

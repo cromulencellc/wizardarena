@@ -1,0 +1,32 @@
+@import "/open-sans/open-sans.css"
+@import "ubuntu-mono"
+
+$body_font: "Open Sans", "Helvetica Neue", Helvetica, "Arial Unicode MS", Arial, sans-serif
+$mono_font: "Ubuntu Mono", "Fantasque Sans Mono", "Menlo", "Consolas", monospace
+
+body, input, button, h1, h2, h3, h4, h5, h6
+  font-family: $body_font
+
+.explanation
+  margin-top: 0.2em
+  font-size: 0.8em
+.small
+  font-size: 0.6em
+
+h1, h2, h3, h4, h5, h6
+  font-style: italic
+  font-weight: 700
+
+span[title]
+  border-bottom: 1px dotted $lefty
+
+.note
+  font-style: italic
+  font-size: 0.8em
+  em, i
+    font-sstyle: regular
+p.note
+  margin: 0.5em auto
+
+pre, code
+  font-family: $mono_font

@@ -1,0 +1,6 @@
+<h2>Edit firewall</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: firewall_path(@conn, :update, @firewall) %>
+
+<%= link "Back", to: firewall_path(@conn, :index) %>

@@ -1,0 +1,8 @@
+NOTES with ENGINE
+
+If you run into database errors after updating the database... remember the engine uses a different user (engine for Postgres).
+
+Update roles for the engine!
+ALTER default privileges in schema public GRANT SELECT, INSERT, UPDATE, DELETE on tables TO engine;
+ALTER default privileges in schema public GRANT select, usage on sequences to engine;
+

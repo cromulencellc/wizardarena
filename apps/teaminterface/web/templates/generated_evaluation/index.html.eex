@@ -1,0 +1,40 @@
+<h2>Listing evaluations</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Team</th>
+      <th>Round</th>
+      <th>Challenge set</th>
+      <th>Connect</th>
+      <th>Success</th>
+      <th>Timeout</th>
+      <th>Time</th>
+      <th>Memory</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for evaluation <- @evaluations do %>
+    <tr>
+      <td><%= evaluation.team_id %></td>
+      <td><%= evaluation.round_id %></td>
+      <td><%= evaluation.challenge_set_id %></td>
+      <td><%= evaluation.connect %></td>
+      <td><%= evaluation.success %></td>
+      <td><%= evaluation.timeout %></td>
+      <td><%= evaluation.time %></td>
+      <td><%= evaluation.memory %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: evaluation_path(@conn, :show, evaluation), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: evaluation_path(@conn, :edit, evaluation), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: evaluation_path(@conn, :delete, evaluation), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New evaluation", to: evaluation_path(@conn, :new) %>

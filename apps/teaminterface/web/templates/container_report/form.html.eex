@@ -1,0 +1,53 @@
+<%= form_for @changeset, @action, fn f -> %>
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= label f, :replay_seed, class: "control-label" %>
+    <%= text_input f, :replay_seed, class: "form-control" %>
+    <%= error_tag f, :replay_seed %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :polls_passed, class: "control-label" %>
+    <%= number_input f, :polls_passed, class: "form-control" %>
+    <%= error_tag f, :polls_passed %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :polls_failed, class: "control-label" %>
+    <%= number_input f, :polls_failed, class: "form-control" %>
+    <%= error_tag f, :polls_failed %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :polls_timed_out, class: "control-label" %>
+    <%= number_input f, :polls_timed_out, class: "form-control" %>
+    <%= error_tag f, :polls_timed_out %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :polls_total, class: "control-label" %>
+    <%= number_input f, :polls_total, class: "form-control" %>
+    <%= error_tag f, :polls_total %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :last_complete_position, class: "control-label" %>
+    <%= number_input f, :last_complete_position, class: "form-control" %>
+    <%= error_tag f, :last_complete_position %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :max_position, class: "control-label" %>
+    <%= number_input f, :max_position, class: "form-control" %>
+    <%= error_tag f, :max_position %>
+  </div>
+
+  <div class="form-group">
+    <%= submit "Submit", class: "btn btn-primary" %>
+  </div>
+<% end %>

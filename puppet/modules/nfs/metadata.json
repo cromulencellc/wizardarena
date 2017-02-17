@@ -1,0 +1,79 @@
+{
+  "name": "derdanne-nfs",
+  "version": "0.0.10",
+  "author": "derdanne",
+  "summary": "Installs and configures NFS server and clients",
+  "license": "Apache-2.0",
+  "source": "https://github.com/derdanne/puppet-nfs.git",
+  "project_page": "https://github.com/derdanne/puppet-nfs",
+  "issues_url": "https://github.com/derdanne/puppet-nfs/issues",
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 4.5.0"},
+    {"name":"puppetlabs-concat","version_requirement":">= 1.1.2"}
+  ],
+  "data_provider": null,
+  "tags": [
+    "nfs",
+    "nfs4",
+    "exports",
+    "mount",
+    "mfc"
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "12.04",
+        "12.10",
+        "13.04",
+        "13.10",
+        "14.04",
+        "14.10",
+        "15.04",
+        "15.10"
+      ]
+    },
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "Gentoo",
+      "operatingsystemrelease": [
+        "1.0"
+      ]
+    },
+    {
+      "operatingsystem": "SLES",
+      "operatingsystemrelease": [
+        "12"
+      ]
+    },
+    {
+      "operatingsystem": "openSUSE",
+      "operatingsystemrelease": [
+        "13"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "pe",
+      "version_requirement": "3.x"
+    },
+    {
+      "name": "puppet",
+      "version_requirement": "3.x"
+    }
+  ]
+}

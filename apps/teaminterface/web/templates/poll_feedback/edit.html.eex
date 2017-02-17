@@ -1,0 +1,6 @@
+<h2>Edit poll feedback</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: poll_feedback_path(@conn, :update, @poll_feedback) %>
+
+<%= link "Back", to: poll_feedback_path(@conn, :index) %>

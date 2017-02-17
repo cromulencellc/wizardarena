@@ -1,0 +1,6 @@
+<h2>New challenge set</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: challenge_set_path(@conn, :create) %>
+
+<%= link "Back", to: challenge_set_path(@conn, :index) %>

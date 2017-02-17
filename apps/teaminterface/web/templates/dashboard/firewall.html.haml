@@ -1,0 +1,43 @@
+.firewall
+  %h1
+    Firewall
+    = @firewall.id
+    for
+    = @cset.shortname
+  %dl
+    %dt Challenge Set
+    %dd= link to: dashboard_path(@conn, :challenge_set, @cset.shortname) do
+      = @cset.name
+      ="(#{@cset.shortname})"
+      - end
+    %dt Team
+    %dd= link to: dashboard_path(@conn, :team, @team.id) do
+      = @team.name
+      - end
+    %dt Submitted during
+    %dd= link to: dashboard_path(@conn, :round, @firewall.round_id) do
+      Round
+      = @firewall.round_id
+      - end
+    %dt Digest
+    %dd= digest @firewall.digest
+    %dt Download
+    %dd= link to: dashboard_path(@conn, :get_ids, @firewall.id) do
+      Download here
+      -end
+
+  %h2 Other appearances:
+  %table
+    %thead
+      %tr
+        %th round
+        %th team
+        %th digest
+        %th actions
+    %tbody
+      - for fw <- @similar do
+        %tr
+          %th= fw.round_id
+          %th= team(fw.team)
+          %th= digest(fw.digest)
+          %td= link("details", to: dashboard_path(@conn, :firewall, fw.id))

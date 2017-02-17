@@ -1,0 +1,7 @@
+FROM 32bit/ubuntu:14.04
+ADD GEN_00000.xml /
+ADD cb-replay /usr/bin/
+RUN apt-get install -y python
+RUN echo $env
+ENTRYPOINT ["cb-replay"]
+CMD ["--negotiate", "--host", "$CADET_PORT_1234_TCP_ADDR", "--p", "$CADET_PORT_1234_TCP_PORT", "/GEN_00000.XML"]

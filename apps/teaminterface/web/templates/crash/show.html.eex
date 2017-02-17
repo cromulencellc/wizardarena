@@ -1,0 +1,28 @@
+<h2>Show crash</h2>
+
+<ul>
+
+  <li>
+    <strong>Team:</strong>
+    <%= @crash.team_id %>
+  </li>
+
+  <li>
+    <strong>Round:</strong>
+    <%= @crash.round_id %>
+  </li>
+
+  <li>
+    <strong>Challenge binary:</strong>
+    <%= @crash.challenge_binary_id %>
+  </li>
+
+  <li>
+    <strong>Signal:</strong>
+    <%= @crash.signal %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: crash_path(@conn, :edit, @crash) %>
+<%= link "Back", to: crash_path(@conn, :index) %>

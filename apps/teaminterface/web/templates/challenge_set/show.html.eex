@@ -1,0 +1,18 @@
+<h2>Show challenge set</h2>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @challenge_set.name %>
+  </li>
+
+  <li>
+    <strong>Shortname:</strong>
+    <%= @challenge_set.shortname %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: challenge_set_path(@conn, :edit, @challenge_set) %>
+<%= link "Back", to: challenge_set_path(@conn, :index) %>

@@ -1,0 +1,4 @@
+#!/bin/bash
+printenv
+echo "RUNNING cb-replay --host $CBIDS_PORT_1235_TCP_ADDR --port $CBIDS_PORT_1235_TCP_PORT --negotiate $1"
+cb-replay --host $CBIDS_PORT_1235_TCP_ADDR --port $CBIDS_PORT_1235_TCP_PORT --negotiate $1

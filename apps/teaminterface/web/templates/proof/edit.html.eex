@@ -1,0 +1,6 @@
+<h2>Edit proof</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: proof_path(@conn, :update, @proof) %>
+
+<%= link "Back", to: proof_path(@conn, :index) %>

@@ -1,0 +1,6 @@
+<h2>New container report</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: container_report_path(@conn, :create) %>
+
+<%= link "Back", to: container_report_path(@conn, :index) %>

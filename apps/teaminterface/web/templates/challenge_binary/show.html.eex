@@ -1,0 +1,23 @@
+<h2>Show challenge binary</h2>
+
+<ul>
+
+  <li>
+    <strong>Challenge set:</strong>
+    <%= @challenge_binary.challenge_set_id %>
+  </li>
+
+  <li>
+    <strong>Index:</strong>
+    <%= @challenge_binary.index %>
+  </li>
+
+  <li>
+    <strong>Size:</strong>
+    <%= @challenge_binary.size %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: challenge_binary_path(@conn, :edit, @challenge_binary) %>
+<%= link "Back", to: challenge_binary_path(@conn, :index) %>

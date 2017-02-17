@@ -1,0 +1,1 @@
+alert (name:"hi mom"; match:"hello there"; skip: 4; match:"bob", 4; replace:"wit";)

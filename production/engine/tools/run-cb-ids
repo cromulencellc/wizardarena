@@ -1,0 +1,6 @@
+#!/bin/bash
+
+printenv
+echo "RUNNING: cb-ids --outbound_host $CBSERVER_PORT_1234_TCP_ADDR --outbound_port $CBSERVER_PORT_1234_TCP_PORT --negotiate --loglevel 4 --listen_port 1235 --csid $1 --connection_id $2 --rules /mnt/idssource/$3 --pcap_host $4 --pcap_port $5"
+
+cb-ids --outbound_host $CBSERVER_PORT_1234_TCP_ADDR --outbound_port $CBSERVER_PORT_1234_TCP_PORT --negotiate --loglevel 4 --listen_port 1235 --csid "$1" --connection_id "$2" --rules "/mnt/idssource/$3" --pcap_host "$4" --pcap_port "$5"

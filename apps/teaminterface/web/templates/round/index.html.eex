@@ -1,0 +1,32 @@
+<h2>Listing rounds</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>Nickname</th>
+      <th>Started at</th>
+      <th>Finished at</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for round <- @rounds do %>
+<tr>
+  <td><%= round.id %></td>
+      <td><%= round.nickname %></td>
+      <td><%= round.started_at %></td>
+      <td><%= round.finished_at %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: round_path(@conn, :show, round), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: round_path(@conn, :edit, round), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: round_path(@conn, :delete, round), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New round", to: round_path(@conn, :new) %>

@@ -1,0 +1,80 @@
+<h2>Show poller</h2>
+
+<ul>
+
+  <li>
+    <strong>Round:</strong>
+    <%= @poller.round_id %>
+  </li>
+
+  <li>
+    <strong>Challenge set:</strong>
+    <%= @poller.challenge_set_id %>
+  </li>
+
+  <li>
+    <strong>Seed:</strong>
+    <%= Base.encode64 @poller.seed %>
+  </li>
+
+  <li>
+    <strong>Mean wall time:</strong>
+    <%= @poller.mean_wall_time %>
+  </li>
+
+  <li>
+    <strong>Stddev wall time:</strong>
+    <%= @poller.stddev_wall_time %>
+  </li>
+
+  <li>
+    <strong>Mean max rss:</strong>
+    <%= @poller.mean_max_rss %>
+  </li>
+
+  <li>
+    <strong>Stddev max rss:</strong>
+    <%= @poller.stddev_max_rss %>
+  </li>
+
+  <li>
+    <strong>Mean min flt:</strong>
+    <%= @poller.mean_min_flt %>
+  </li>
+
+  <li>
+    <strong>Stddev min flt:</strong>
+    <%= @poller.stddev_min_flt %>
+  </li>
+
+  <li>
+    <strong>Mean utime:</strong>
+    <%= @poller.mean_utime %>
+  </li>
+
+  <li>
+    <strong>Stddev utime:</strong>
+    <%= @poller.stddev_utime %>
+  </li>
+
+  <li>
+    <strong>Mean task clock:</strong>
+    <%= @poller.mean_task_clock %>
+  </li>
+
+  <li>
+    <strong>Stddev task clock:</strong>
+    <%= @poller.stddev_task_clock %>
+  </li>
+
+  <li>
+    <strong>Mean cpu clock:</strong>
+    <%= @poller.mean_cpu_clock %>
+  </li>
+
+  <li>
+    <strong>Stddev cpu clock:</strong>
+    <%= @poller.stddev_cpu_clock %>
+  </li>
+
+</ul>

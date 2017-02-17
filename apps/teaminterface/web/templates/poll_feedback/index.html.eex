@@ -1,0 +1,75 @@
+<h1>Listing poll feedbacks</h1>
+
+<div class="utils">
+  <div class="pages">
+    <h2>Pages</h2>
+    <%= pagination_links @conn, @pagination, [], @symbolized_params %>
+  </div>
+
+  <div class="filters">
+    <h2>
+      Filters
+      <%= link "clear", to: poll_feedback_path(@conn, :index), class: "clear" %>
+    </h2>
+    <%= filter_explainer @conn, @conn.params %>
+  </div>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>rnd</th>
+      <th>Team</th>
+      <th class="empty">&nbsp;</th>
+      <th>Challenge set</th>
+      <th>Poller</th>
+      <th>Wall time</th>
+      <th>Max rss</th>
+      <th>Min flt</th>
+      <th>Utime</th>
+      <th>Task clock</th>
+      <th>Cpu clock</th>
+      <th>Status</th>
+
+      <th class="empty"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for poll_feedback <- @poll_feedbacks do %>
+    <tr>
+      <td><%= poll_feedback.poller.round_id %></td>
+      <td>
+        <%= link poll_feedback.team.shortname, to: team_path(@conn, :show, poll_feedback.team) %>
+        <%= query @conn, "\u2208", team_id: poll_feedback.team_id %>
+        <%= query @conn, "\u2209", not_team_id: poll_feedback.team_id %>
+      </td>
+      <td><%= query @conn, "\u2229", team_id: poll_feedback.team_id, challenge_set_id: poll_feedback.challenge_set.id %></td>
+      <td>
+        <%= link poll_feedback.challenge_set.shortname, to: challenge_set_path(@conn, :show, poll_feedback.challenge_set) %>
+        <%= query @conn, "\u2208", challenge_set_id: poll_feedback.challenge_set.id %>
+        <%= query @conn, "\u2209", not_challenge_set_id: poll_feedback.challenge_set.id %>
+      </td>
+      <td>
+        <%= link poll_feedback.poller_id, to: poller_path(@conn, :show, poll_feedback.poller_id) %>
+        <%= query @conn, "\u2208", poller_id: poll_feedback.poller_id %>
+        <%= query @conn, "\u2209", not_poller_id: poll_feedback.poller_id %>
+      </td>
+      <td class="data"><%= poll_feedback.wall_time %></td>
+      <td class="data"><%= poll_feedback.max_rss %></td>
+      <td class="data"><%= poll_feedback.min_flt %></td>
+      <td class="data"><%= poll_feedback.utime %></td>
+      <td class="data"><%= poll_feedback.task_clock %></td>
+      <td class="data"><%= poll_feedback.cpu_clock %></td>
+      <td>
+        <%= poll_feedback.status %>
+        <%= query @conn, "\u2208", status: poll_feedback.status %>
+        <%= query @conn, "\u2209", not_status: poll_feedback.status %>
+      </td>
+
+      <td class="text-right">
+        <%= link "Show", to: poll_feedback_path(@conn, :show, poll_feedback), class: "btn btn-default btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>

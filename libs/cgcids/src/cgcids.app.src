@@ -1,0 +1,15 @@
+{application, cgcids,
+ [{description, "Parser for CGC IDS rules"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {applications,
+   [kernel,
+    stdlib
+   ]},
+  {env,[]},
+  {modules, [cgcids_parser, cgcids_lexer]},
+
+  {maintainers, ["Cromulence"]},
+  {licenses, ["MIT"]},
+  {links, []}
+ ]}.

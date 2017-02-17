@@ -1,0 +1,29 @@
+.proof_Feedback
+  %h1
+    PoV Feedback for
+    = @cset.shortname
+
+  %p
+    There are
+    = @count
+    total runs.
+
+
+  %table
+    %thead
+      %tr
+        %th round
+        %th target
+        %th PoV
+        %th throw
+        %th success
+    %tbody.data
+      - for pf <- @feedbacks do
+        %tr
+          %td= pf.round_id
+          %td= team pf.target
+          %td= link to: dashboard_path(@conn, :proof, pf.proof_id) do
+            = digest pf.proof.digest
+            - end
+          %td= pf.throw
+          %td= pf.successful

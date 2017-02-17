@@ -1,0 +1,32 @@
+!!! 5
+%html(lang="en")
+  %head
+    %meta(charset="utf-8")
+    %meta(http-equiv="X-UA-Compatible" content="IE=edge")
+    %meta(name="viewport" content="width=device-width, initial-scale=1")
+    %meta(name="description" content="")
+    %meta(name="author" content="")
+
+    %title= title assigns
+    %link{rel: "stylesheet", href: "#{static_path(@conn, "/css/app.css")}"}
+
+  %body{class: "#{body_class(@conn)}"}
+    %header
+      %h1.title= title assigns
+      .team_name= @conn.assigns.authed_team.name
+      #countdown= round
+      %nav
+        %ul
+          %li= link("Dashboard", to: dashboard_path(@conn, :index))
+          %li= link("Scoreboard", to: dashboard_path(@conn, :scoreboard))
+          %li= link("Help", to: "https://cgc-docs.legitbs.net/")
+    #content
+      - if get_flash(@conn, :info) do
+        %p.alert.alert-info(role="alert")= get_flash(@conn, :info)
+      - if get_flash(@conn, :error) do
+        %p.alert.alert-danger(role="alert")= get_flash(@conn, :error)
+
+      %main(role="main")
+        = render @view_module, @view_template, assigns
+
+    %script{src: "#{static_path(@conn, "/js/app.js")}", type: 'text/javascript'}

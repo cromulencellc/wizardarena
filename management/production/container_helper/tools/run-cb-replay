@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cb-master-replay --host $CBSERVER_PORT_1234_TCP_ADDR --port $CBSERVER_PORT_1234_TCP_PORT --throws $1 --round_seed $2 --round_secret $3 --round_label $4 --directory $5

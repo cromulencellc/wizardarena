@@ -1,0 +1,38 @@
+<h2>Listing scores</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Round</th>
+      <th>Team</th>
+      <th>Security</th>
+      <th>Availability</th>
+      <th>Evaluation</th>
+      <th>Functionality</th>
+      <th>Performance</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for score <- @scores do %>
+    <tr>
+      <td><%= score.round_id %></td>
+      <td><%= score.team.name %></td>
+      <td><%= score.security %></td>
+      <td><%= Float.round(score.availability, 3) %></td>
+      <td><%= Float.round(score.evaluation, 3) %></td>
+      <td><%= Float.round(score.functionality, 3) %></td>
+      <td><%= Float.round(score.performance, 3) %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: score_path(@conn, :show, score), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: score_path(@conn, :edit, score), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: score_path(@conn, :delete, score), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New score", to: score_path(@conn, :new) %>

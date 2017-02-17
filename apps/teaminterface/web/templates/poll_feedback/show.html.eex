@@ -1,0 +1,53 @@
+<h2>Show poll feedback</h2>
+
+<ul>
+
+  <li>
+    <strong>Team:</strong>
+    <%= @poll_feedback.team_id %>
+  </li>
+
+  <li>
+    <strong>Poller:</strong>
+    <%= @poll_feedback.poller_id %>
+  </li>
+
+  <li>
+    <strong>Wall time:</strong>
+    <%= @poll_feedback.wall_time %>
+  </li>
+
+  <li>
+    <strong>Max rss:</strong>
+    <%= @poll_feedback.max_rss %>
+  </li>
+
+  <li>
+    <strong>Min flt:</strong>
+    <%= @poll_feedback.min_flt %>
+  </li>
+
+  <li>
+    <strong>Utime:</strong>
+    <%= @poll_feedback.utime %>
+  </li>
+
+  <li>
+    <strong>Task clock:</strong>
+    <%= @poll_feedback.task_clock %>
+  </li>
+
+  <li>
+    <strong>Cpu clock:</strong>
+    <%= @poll_feedback.cpu_clock %>
+  </li>
+
+  <li>
+    <strong>Status:</strong>
+    <%= @poll_feedback.status %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: poll_feedback_path(@conn, :edit, @poll_feedback) %>
+<%= link "Back", to: poll_feedback_path(@conn, :index) %>

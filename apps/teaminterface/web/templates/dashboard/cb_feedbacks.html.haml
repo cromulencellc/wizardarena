@@ -1,0 +1,28 @@
+.cb_feedback
+  %h1
+    CB Feedback for
+    = @cset.shortname
+
+  %p
+    There are
+    = @count
+    total crashes.
+
+  %table
+    %thead
+      %tr
+        %th round
+        %th challenge binary
+        %th signal
+        %th timestamp
+        %th inserted
+    %tbody.data
+      - for crash <- @crashes do
+        %tr
+          %td= crash.round_id
+          %td
+            - cbid = cbid(crash.challenge_binary, crash.challenge_set)
+            = link cbid, to: dashboard_path(@conn, :challenge_binary, cbid)
+          %td= crash.signal
+          %td= DateTime.to_unix crash.timestamp
+          %td= DateTime.to_unix crash.inserted_at

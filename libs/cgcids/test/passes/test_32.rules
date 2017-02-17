@@ -1,0 +1,1 @@
+admit (name:"ignore everything else to the newline"; side:client; match:"\x0a";)

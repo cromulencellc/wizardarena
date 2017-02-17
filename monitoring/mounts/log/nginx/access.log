@@ -1,0 +1,7 @@
+172.17.42.1 - - [26/May/2016:01:37:24 +0000] "GET / HTTP/1.1" 200 542 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0"
+172.17.42.1 - - [26/May/2016:01:37:24 +0000] "GET /browser/header/ HTTP/1.1" 200 1018 "http://localhost:8080/" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0"
+172.17.42.1 - - [26/May/2016:01:37:24 +0000] "GET /composer/? HTTP/1.1" 200 1626 "http://localhost:8080/" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0"
+172.17.42.1 - - [26/May/2016:01:37:24 +0000] "GET /render HTTP/1.1" 499 0 "http://localhost:8080/composer/?" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0"
+172.17.42.1 - - [26/May/2016:01:37:24 +0000] "GET /render/?width=586&height=308&_salt=1464226644.621 HTTP/1.1" 200 1060 "http://localhost:8080/composer/?" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0"
+172.17.42.1 - - [26/May/2016:01:37:24 +0000] "GET /favicon.ico HTTP/1.1" 200 542 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0"
+172.17.42.1 - - [26/May/2016:01:37:30 +0000] "GET /metrics/find?query=* HTTP/1.1" 200 12 "http://127.0.0.1:3000/datasources/edit/3" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0"

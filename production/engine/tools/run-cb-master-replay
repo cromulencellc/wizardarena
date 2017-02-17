@@ -1,0 +1,6 @@
+#!/bin/bash
+
+printenv
+echo "cb-master-replay --host $CBIDS_PORT_1235_TCP_ADDR --port $CBIDS_PORT_1235_TCP_PORT --throws $1 --round_seed $2 --round_secret $3 --round_label $4 --poll_directory $5 --pov_directory $6 --max_pov_timeout 30 --split_start_pos $7 --split_end_pos $8"
+
+cb-master-replay --host $CBIDS_PORT_1235_TCP_ADDR --port $CBIDS_PORT_1235_TCP_PORT --throws "$1" --round_seed "$2" --round_secret "$3" --round_label "$4" --poll_directory "$5" --pov_directory "$6" --max_pov_timeout 30 --split_start_pos "$7" --split_end_pos "$8"

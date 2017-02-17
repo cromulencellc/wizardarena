@@ -1,0 +1,6 @@
+<h2>Edit evaluation</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: evaluation_path(@conn, :update, @evaluation) %>
+
+<%= link "Back", to: evaluation_path(@conn, :index) %>

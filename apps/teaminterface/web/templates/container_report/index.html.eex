@@ -1,0 +1,44 @@
+<h2>Listing container reports</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Team</th>
+      <th>Round</th>
+      <th>Challenge set</th>
+      <th>Replay seed</th>
+      <th>Polls passed</th>
+      <th>Polls failed</th>
+      <th>Polls timed out</th>
+      <th>Polls total</th>
+      <th>Last complete position</th>
+      <th>Max position</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for container_report <- @container_reports do %>
+    <tr>
+      <td><%= container_report.team_id %></td>
+      <td><%= container_report.round_id %></td>
+      <td><%= container_report.challenge_set_id %></td>
+      <td><%= container_report.replay_seed %></td>
+      <td><%= container_report.polls_passed %></td>
+      <td><%= container_report.polls_failed %></td>
+      <td><%= container_report.polls_timed_out %></td>
+      <td><%= container_report.polls_total %></td>
+      <td><%= container_report.last_complete_position %></td>
+      <td><%= container_report.max_position %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: container_report_path(@conn, :show, container_report), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: container_report_path(@conn, :edit, container_report), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: container_report_path(@conn, :delete, container_report), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New container report", to: container_report_path(@conn, :new) %>

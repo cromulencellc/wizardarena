@@ -1,0 +1,3 @@
+#!/bin/bash
+
+sudo -u postgres pg_restore --no-owner --no-privileges -d teaminterface_dev /home/jdub/wa_source/wizardarena/production/engine/pgdump/teaminterface-1460132120.pgdump

@@ -1,0 +1,89 @@
+<%= form_for @changeset, @action, fn f -> %>
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= label f, :seed, class: "control-label" %>
+    <%= text_input f, :seed, class: "form-control" %>
+    <%= error_tag f, :seed %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :mean_wall_time, class: "control-label" %>
+    <%= number_input f, :mean_wall_time, step: "any", class: "form-control" %>
+    <%= error_tag f, :mean_wall_time %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :stddev_wall_time, class: "control-label" %>
+    <%= number_input f, :stddev_wall_time, step: "any", class: "form-control" %>
+    <%= error_tag f, :stddev_wall_time %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :mean_max_rss, class: "control-label" %>
+    <%= number_input f, :mean_max_rss, step: "any", class: "form-control" %>
+    <%= error_tag f, :mean_max_rss %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :stddev_max_rss, class: "control-label" %>
+    <%= number_input f, :stddev_max_rss, step: "any", class: "form-control" %>
+    <%= error_tag f, :stddev_max_rss %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :mean_min_flt, class: "control-label" %>
+    <%= number_input f, :mean_min_flt, step: "any", class: "form-control" %>
+    <%= error_tag f, :mean_min_flt %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :stddev_min_flt, class: "control-label" %>
+    <%= number_input f, :stddev_min_flt, step: "any", class: "form-control" %>
+    <%= error_tag f, :stddev_min_flt %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :mean_utime, class: "control-label" %>
+    <%= number_input f, :mean_utime, step: "any", class: "form-control" %>
+    <%= error_tag f, :mean_utime %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :stddev_utime, class: "control-label" %>
+    <%= number_input f, :stddev_utime, step: "any", class: "form-control" %>
+    <%= error_tag f, :stddev_utime %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :mean_task_clock, class: "control-label" %>
+    <%= number_input f, :mean_task_clock, step: "any", class: "form-control" %>
+    <%= error_tag f, :mean_task_clock %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :stddev_task_clock, class: "control-label" %>
+    <%= number_input f, :stddev_task_clock, step: "any", class: "form-control" %>
+    <%= error_tag f, :stddev_task_clock %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :mean_cpu_clock, class: "control-label" %>
+    <%= number_input f, :mean_cpu_clock, step: "any", class: "form-control" %>
+    <%= error_tag f, :mean_cpu_clock %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :stddev_cpu_clock, class: "control-label" %>
+    <%= number_input f, :stddev_cpu_clock, step: "any", class: "form-control" %>
+    <%= error_tag f, :stddev_cpu_clock %>
+  </div>
+
+  <div class="form-group">
+    <%= submit "Submit", class: "btn btn-primary" %>
+  </div>
+<% end %>

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cb-replay --host $CBSERVER_PORT_1234_TCP_ADDR --port $CBSERVER_PORT_1234_TCP_PORT --negotiate $1

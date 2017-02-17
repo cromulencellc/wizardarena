@@ -1,0 +1,17 @@
+class master-nfs {
+        package { 'nfs-kernel-server':
+                name => 'nfs-kernel-server',
+                ensure => installed,
+	}~>
+#	zpool { 'storage-zfs-pool-wa':
+#		pool => 'storage-zfs-wa',
+#		ensure => present,
+#		disk => 'todo',
+#	}-> 
+	zfs { 'storage-zfs-wa':
+		ensure => present,
+		quota => '80G',
+		compression => 'off',
+		mountpoint => '/wa_storage',
+	}
+}

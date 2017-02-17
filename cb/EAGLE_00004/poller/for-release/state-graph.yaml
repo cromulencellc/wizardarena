@@ -1,0 +1,6 @@
+---
+nodes:
+- name: start
+- name: end
+edges:
+- start: end

@@ -1,0 +1,44 @@
+<h2>Show proof</h2>
+
+<ul>
+
+  <li>
+    <strong>Team:</strong>
+    <%= @proof.team.name %>
+    <%= link "show", to: team_path(@conn, :show, @proof.team) %>
+    <%= link "other proofs", to: proof_path(@conn, :index, team_id: @proof.team.id) %>
+  </li>
+
+  <li>
+    <strong>Round:</strong>
+    <%= @proof.round_id %>
+  </li>
+
+  <li>
+    <strong>Challenge set:</strong>
+    <%= @proof.challenge_set.shortname %>
+    <%= link "show", to: challenge_set_path(@conn, :show, @proof.challenge_set) %>
+    <%= link "other proofs", to: proof_path(@conn, :index, challenge_set_id: @proof.challenge_set.id) %>
+  </li>
+
+  <li>
+    <strong>Target:</strong>
+    <%= @proof.target.shortname %>
+    <%= link "show", to: team_path(@conn, :show, @proof.target) %>
+    <%= link "other proofs", to: proof_path(@conn, :index, target_id: @proof.target.id) %>
+  </li>
+
+  <li>
+    <strong>Digest:</strong>
+    <%= digest @proof.digest %>
+    <%= link "other proofs", to: proof_path(@conn, :index, digest: @proof.digest) %>
+  </li>
+
+  <li>
+    <strong>Feedbacks:</strong>
+    <%= @feedback_count %>
+    <%= link "show", to: proof_feedback_path(@conn, :index, proof_id: @proof.id) %>
+</ul>
+
+<%= link "Edit", to: proof_path(@conn, :edit, @proof) %>
+<%= link "Back", to: proof_path(@conn, :index) %>

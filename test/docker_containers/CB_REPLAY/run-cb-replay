@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cb-replay --host $CADET_PORT_1234_TCP_ADDR --port $CADET_PORT_1234_TCP_PORT --negotiate $1

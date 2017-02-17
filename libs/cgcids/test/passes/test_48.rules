@@ -1,0 +1,1 @@
+# alert (name:"foo match:"; match:"itch";) foo  # known bad, extra content after the paren.

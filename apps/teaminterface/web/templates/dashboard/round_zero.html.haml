@@ -1,0 +1,49 @@
+.round_zero
+  %h1 Round 0
+  .all_rounds= link "all rounds", to: dashboard_path(@conn, :rounds)
+  %p
+    Round zero is a special round for initial game state.
+
+  .csets
+    %h2 Challenge Sets
+
+    - for cset <- @challenge_sets do
+      %article.cset{id: "cset-#{cset.id}"}
+        %h2
+          = link(to: dashboard_path(@conn, :challenge_set, csid(cset))) do
+            %span.shortname= cset.shortname
+            %span.name= cset.name
+            - end
+        .cset_details
+          %h3 firewall
+          - fw = Teaminterface.Firewall.cset_team(cset, @team)
+          %p
+            replaced
+            = ago fw.inserted_at
+          %p
+            during
+            = link "round #{fw.round_id}", to: dashboard_path(@conn, :round, fw.round_id)
+          %p
+            digest
+            = digest fw.digest
+          %p= link "firewall details", to: dashboard_path(@conn, :firewall, fw)
+        .cbs
+          %h3 binaries
+          %table
+            %thead
+              %tr
+                %th filename
+                %th digest
+                %th replaced
+                %th actions
+            %tbody
+              - for cb <- cset.challenge_binaries do
+                - cb = %{cb | challenge_set: cset}
+                - rep = Teaminterface.Replacement.cb_team(cb, @team)
+                %tr
+                  %td= Teaminterface.ChallengeBinary.cbid(cb)
+                  %td= digest rep.digest
+                  %td
+                    = ago rep.inserted_at
+                    = link "round #{rep.round_id}", to: dashboard_path(@conn, :round, rep.round_id)
+                  %td= link "replacement details", to: dashboard_path(@conn, :replacement, rep)

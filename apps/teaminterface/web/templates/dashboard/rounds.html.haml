@@ -1,0 +1,17 @@
+.rounds
+  %h1 All Rounds
+
+  %table
+    %thead
+      %tr
+        %th id
+        %th started at
+        %th finished at
+        %th
+    %tbody
+      - for round <- @rounds do
+        %tr
+          %th= link round.id, to: dashboard_path(@conn, :round, round)
+          %td= ago round.started_at
+          %td= ago round.finished_at
+          %th= link "details", to: dashboard_path(@conn, :round, round)

@@ -1,0 +1,28 @@
+<h2>Show firewall</h2>
+
+<ul>
+
+  <li>
+    <strong>Team:</strong>
+    <%= @firewall.team_id %>
+  </li>
+
+  <li>
+    <strong>Round:</strong>
+    <%= @firewall.round_id %>
+  </li>
+
+  <li>
+    <strong>Challenge set:</strong>
+    <%= @firewall.challenge_set_id %>
+  </li>
+
+  <li>
+    <strong>Digest:</strong>
+    <%= @firewall.digest %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: firewall_path(@conn, :edit, @firewall) %>
+<%= link "Back", to: firewall_path(@conn, :index) %>

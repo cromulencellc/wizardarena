@@ -1,0 +1,752 @@
+
+state 0
+	$accept: .input $end 
+	input: .    (1)
+
+	RULE_ALERT  shift 5
+	RULE_ADMIT  shift 6
+	RULE_BLOCK  shift 7
+	'\n'  shift 3
+	.  reduce 1 (src line 120)
+
+	expr  goto 4
+	input  goto 1
+	line  goto 2
+
+state 1
+	$accept:  input.$end 
+
+	$end  accept
+	.  error
+
+
+state 2
+	input:  line.    (2)
+
+	.  reduce 2 (src line 121)
+
+
+state 3
+	line:  '\n'.    (3)
+
+	.  reduce 3 (src line 124)
+
+
+state 4
+	line:  expr.'\n' 
+
+	'\n'  shift 8
+	.  error
+
+
+state 5
+	expr:  RULE_ALERT.'(' rule_base ')' 
+
+	'('  shift 9
+	.  error
+
+
+state 6
+	expr:  RULE_ADMIT.'(' rule_base ')' 
+
+	'('  shift 10
+	.  error
+
+
+state 7
+	expr:  RULE_BLOCK.'(' rule_base ')' 
+
+	'('  shift 11
+	.  error
+
+
+state 8
+	line:  expr '\n'.    (4)
+
+	.  reduce 4 (src line 125)
+
+
+state 9
+	expr:  RULE_ALERT '('.rule_base ')' 
+
+	ATTRIBUTE_NAME  shift 14
+	.  error
+
+	rule_name  goto 13
+	rule_base  goto 12
+
+state 10
+	expr:  RULE_ADMIT '('.rule_base ')' 
+
+	ATTRIBUTE_NAME  shift 14
+	.  error
+
+	rule_name  goto 13
+	rule_base  goto 15
+
+state 11
+	expr:  RULE_BLOCK '('.rule_base ')' 
+
+	ATTRIBUTE_NAME  shift 14
+	.  error
+
+	rule_name  goto 13
+	rule_base  goto 16
+
+state 12
+	expr:  RULE_ALERT '(' rule_base.')' 
+
+	')'  shift 17
+	.  error
+
+
+state 13
+	rule_base:  rule_name.rule_options 
+	rule_base:  rule_name.rule_options rule_flush 
+
+	ATTRIBUTE_SIDE  shift 24
+	ATTRIBUTE_REGEX  shift 25
+	ATTRIBUTE_MATCH  shift 26
+	ATTRIBUTE_SKIP  shift 27
+	ATTRIBUTE_STATE  shift 28
+	.  error
+
+	rule_side  goto 19
+	rule_regex  goto 20
+	rule_match  goto 21
+	rule_skip  goto 22
+	rule_options  goto 18
+	rule_state  goto 23
+
+state 14
+	rule_name:  ATTRIBUTE_NAME.':' STRING ';' 
+
+	':'  shift 29
+	.  error
+
+
+state 15
+	expr:  RULE_ADMIT '(' rule_base.')' 
+
+	')'  shift 30
+	.  error
+
+
+state 16
+	expr:  RULE_BLOCK '(' rule_base.')' 
+
+	')'  shift 31
+	.  error
+
+
+state 17
+	expr:  RULE_ALERT '(' rule_base ')'.    (5)
+
+	.  reduce 5 (src line 132)
+
+
+state 18
+	rule_base:  rule_name rule_options.    (8)
+	rule_base:  rule_name rule_options.rule_flush 
+
+	ATTRIBUTE_FLUSH  shift 33
+	.  reduce 8 (src line 158)
+
+	rule_flush  goto 32
+
+state 19
+	rule_options:  rule_side.    (10)
+	rule_options:  rule_side.rule_options 
+
+	ATTRIBUTE_SIDE  shift 24
+	ATTRIBUTE_REGEX  shift 25
+	ATTRIBUTE_MATCH  shift 26
+	ATTRIBUTE_SKIP  shift 27
+	ATTRIBUTE_STATE  shift 28
+	.  reduce 10 (src line 171)
+
+	rule_side  goto 19
+	rule_regex  goto 20
+	rule_match  goto 21
+	rule_skip  goto 22
+	rule_options  goto 34
+	rule_state  goto 23
+
+state 20
+	rule_options:  rule_regex.    (11)
+	rule_options:  rule_regex.rule_options 
+
+	ATTRIBUTE_SIDE  shift 24
+	ATTRIBUTE_REGEX  shift 25
+	ATTRIBUTE_MATCH  shift 26
+	ATTRIBUTE_SKIP  shift 27
+	ATTRIBUTE_STATE  shift 28
+	.  reduce 11 (src line 178)
+
+	rule_side  goto 19
+	rule_regex  goto 20
+	rule_match  goto 21
+	rule_skip  goto 22
+	rule_options  goto 35
+	rule_state  goto 23
+
+state 21
+	rule_options:  rule_match.    (12)
+	rule_options:  rule_match.rule_options 
+
+	ATTRIBUTE_SIDE  shift 24
+	ATTRIBUTE_REGEX  shift 25
+	ATTRIBUTE_MATCH  shift 26
+	ATTRIBUTE_SKIP  shift 27
+	ATTRIBUTE_STATE  shift 28
+	.  reduce 12 (src line 185)
+
+	rule_side  goto 19
+	rule_regex  goto 20
+	rule_match  goto 21
+	rule_skip  goto 22
+	rule_options  goto 36
+	rule_state  goto 23
+
+state 22
+	rule_options:  rule_skip.    (13)
+	rule_options:  rule_skip.rule_options 
+
+	ATTRIBUTE_SIDE  shift 24
+	ATTRIBUTE_REGEX  shift 25
+	ATTRIBUTE_MATCH  shift 26
+	ATTRIBUTE_SKIP  shift 27
+	ATTRIBUTE_STATE  shift 28
+	.  reduce 13 (src line 192)
+
+	rule_side  goto 19
+	rule_regex  goto 20
+	rule_match  goto 21
+	rule_skip  goto 22
+	rule_options  goto 37
+	rule_state  goto 23
+
+state 23
+	rule_options:  rule_state.    (14)
+	rule_options:  rule_state.rule_options 
+
+	ATTRIBUTE_SIDE  shift 24
+	ATTRIBUTE_REGEX  shift 25
+	ATTRIBUTE_MATCH  shift 26
+	ATTRIBUTE_SKIP  shift 27
+	ATTRIBUTE_STATE  shift 28
+	.  reduce 14 (src line 199)
+
+	rule_side  goto 19
+	rule_regex  goto 20
+	rule_match  goto 21
+	rule_skip  goto 22
+	rule_options  goto 38
+	rule_state  goto 23
+
+state 24
+	rule_side:  ATTRIBUTE_SIDE.':' SIDE_SERVER ';' 
+	rule_side:  ATTRIBUTE_SIDE.':' SIDE_CLIENT ';' 
+	rule_side:  ATTRIBUTE_SIDE.':' STRING ';' 
+
+	':'  shift 39
+	.  error
+
+
+state 25
+	rule_regex:  ATTRIBUTE_REGEX.':' STRING ';' 
+
+	':'  shift 40
+	.  error
+
+
+state 26
+	rule_match:  ATTRIBUTE_MATCH.':' STRING ';' 
+	rule_match:  ATTRIBUTE_MATCH.':' STRING ',' NUMBER ';' 
+	rule_match:  ATTRIBUTE_MATCH.':' STRING ',' ATTRIBUTE_REPLACE ':' STRING ';' 
+	rule_match:  ATTRIBUTE_MATCH.':' STRING ',' NUMBER ',' ATTRIBUTE_REPLACE ':' STRING ';' 
+
+	':'  shift 41
+	.  error
+
+
+state 27
+	rule_skip:  ATTRIBUTE_SKIP.':' NUMBER ';' 
+
+	':'  shift 42
+	.  error
+
+
+state 28
+	rule_state:  ATTRIBUTE_STATE.':' ATTRIBUTE_STATE_SET ',' WORDCHAR ';' 
+	rule_state:  ATTRIBUTE_STATE.':' ATTRIBUTE_STATE_UNSET ',' WORDCHAR ';' 
+	rule_state:  ATTRIBUTE_STATE.':' ATTRIBUTE_STATE_IS ',' WORDCHAR ';' 
+	rule_state:  ATTRIBUTE_STATE.':' ATTRIBUTE_STATE_NOT ',' WORDCHAR ';' 
+
+	':'  shift 43
+	.  error
+
+
+state 29
+	rule_name:  ATTRIBUTE_NAME ':'.STRING ';' 
+
+	STRING  shift 44
+	.  error
+
+
+state 30
+	expr:  RULE_ADMIT '(' rule_base ')'.    (6)
+
+	.  reduce 6 (src line 140)
+
+
+state 31
+	expr:  RULE_BLOCK '(' rule_base ')'.    (7)
+
+	.  reduce 7 (src line 148)
+
+
+state 32
+	rule_base:  rule_name rule_options rule_flush.    (9)
+
+	.  reduce 9 (src line 163)
+
+
+state 33
+	rule_flush:  ATTRIBUTE_FLUSH.':' SIDE_CLIENT ';' 
+	rule_flush:  ATTRIBUTE_FLUSH.':' SIDE_SERVER ';' 
+	rule_flush:  ATTRIBUTE_FLUSH.':' STRING ';' 
+
+	':'  shift 45
+	.  error
+
+
+state 34
+	rule_options:  rule_side rule_options.    (15)
+
+	.  reduce 15 (src line 206)
+
+
+state 35
+	rule_options:  rule_regex rule_options.    (17)
+
+	.  reduce 17 (src line 220)
+
+
+state 36
+	rule_options:  rule_match rule_options.    (16)
+
+	.  reduce 16 (src line 213)
+
+
+state 37
+	rule_options:  rule_skip rule_options.    (18)
+
+	.  reduce 18 (src line 227)
+
+
+state 38
+	rule_options:  rule_state rule_options.    (19)
+
+	.  reduce 19 (src line 234)
+
+
+state 39
+	rule_side:  ATTRIBUTE_SIDE ':'.SIDE_SERVER ';' 
+	rule_side:  ATTRIBUTE_SIDE ':'.SIDE_CLIENT ';' 
+	rule_side:  ATTRIBUTE_SIDE ':'.STRING ';' 
+
+	STRING  shift 48
+	SIDE_CLIENT  shift 47
+	SIDE_SERVER  shift 46
+	.  error
+
+
+state 40
+	rule_regex:  ATTRIBUTE_REGEX ':'.STRING ';' 
+
+	STRING  shift 49
+	.  error
+
+
+state 41
+	rule_match:  ATTRIBUTE_MATCH ':'.STRING ';' 
+	rule_match:  ATTRIBUTE_MATCH ':'.STRING ',' NUMBER ';' 
+	rule_match:  ATTRIBUTE_MATCH ':'.STRING ',' ATTRIBUTE_REPLACE ':' STRING ';' 
+	rule_match:  ATTRIBUTE_MATCH ':'.STRING ',' NUMBER ',' ATTRIBUTE_REPLACE ':' STRING ';' 
+
+	STRING  shift 50
+	.  error
+
+
+state 42
+	rule_skip:  ATTRIBUTE_SKIP ':'.NUMBER ';' 
+
+	NUMBER  shift 51
+	.  error
+
+
+state 43
+	rule_state:  ATTRIBUTE_STATE ':'.ATTRIBUTE_STATE_SET ',' WORDCHAR ';' 
+	rule_state:  ATTRIBUTE_STATE ':'.ATTRIBUTE_STATE_UNSET ',' WORDCHAR ';' 
+	rule_state:  ATTRIBUTE_STATE ':'.ATTRIBUTE_STATE_IS ',' WORDCHAR ';' 
+	rule_state:  ATTRIBUTE_STATE ':'.ATTRIBUTE_STATE_NOT ',' WORDCHAR ';' 
+
+	ATTRIBUTE_STATE_SET  shift 52
+	ATTRIBUTE_STATE_UNSET  shift 53
+	ATTRIBUTE_STATE_IS  shift 54
+	ATTRIBUTE_STATE_NOT  shift 55
+	.  error
+
+
+state 44
+	rule_name:  ATTRIBUTE_NAME ':' STRING.';' 
+
+	';'  shift 56
+	.  error
+
+
+state 45
+	rule_flush:  ATTRIBUTE_FLUSH ':'.SIDE_CLIENT ';' 
+	rule_flush:  ATTRIBUTE_FLUSH ':'.SIDE_SERVER ';' 
+	rule_flush:  ATTRIBUTE_FLUSH ':'.STRING ';' 
+
+	STRING  shift 59
+	SIDE_CLIENT  shift 57
+	SIDE_SERVER  shift 58
+	.  error
+
+
+state 46
+	rule_side:  ATTRIBUTE_SIDE ':' SIDE_SERVER.';' 
+
+	';'  shift 60
+	.  error
+
+
+state 47
+	rule_side:  ATTRIBUTE_SIDE ':' SIDE_CLIENT.';' 
+
+	';'  shift 61
+	.  error
+
+
+state 48
+	rule_side:  ATTRIBUTE_SIDE ':' STRING.';' 
+
+	';'  shift 62
+	.  error
+
+
+state 49
+	rule_regex:  ATTRIBUTE_REGEX ':' STRING.';' 
+
+	';'  shift 63
+	.  error
+
+
+state 50
+	rule_match:  ATTRIBUTE_MATCH ':' STRING.';' 
+	rule_match:  ATTRIBUTE_MATCH ':' STRING.',' NUMBER ';' 
+	rule_match:  ATTRIBUTE_MATCH ':' STRING.',' ATTRIBUTE_REPLACE ':' STRING ';' 
+	rule_match:  ATTRIBUTE_MATCH ':' STRING.',' NUMBER ',' ATTRIBUTE_REPLACE ':' STRING ';' 
+
+	';'  shift 64
+	','  shift 65
+	.  error
+
+
+state 51
+	rule_skip:  ATTRIBUTE_SKIP ':' NUMBER.';' 
+
+	';'  shift 66
+	.  error
+
+
+state 52
+	rule_state:  ATTRIBUTE_STATE ':' ATTRIBUTE_STATE_SET.',' WORDCHAR ';' 
+
+	','  shift 67
+	.  error
+
+
+state 53
+	rule_state:  ATTRIBUTE_STATE ':' ATTRIBUTE_STATE_UNSET.',' WORDCHAR ';' 
+
+	','  shift 68
+	.  error
+
+
+state 54
+	rule_state:  ATTRIBUTE_STATE ':' ATTRIBUTE_STATE_IS.',' WORDCHAR ';' 
+
+	','  shift 69
+	.  error
+
+
+state 55
+	rule_state:  ATTRIBUTE_STATE ':' ATTRIBUTE_STATE_NOT.',' WORDCHAR ';' 
+
+	','  shift 70
+	.  error
+
+
+state 56
+	rule_name:  ATTRIBUTE_NAME ':' STRING ';'.    (20)
+
+	.  reduce 20 (src line 243)
+
+
+state 57
+	rule_flush:  ATTRIBUTE_FLUSH ':' SIDE_CLIENT.';' 
+
+	';'  shift 71
+	.  error
+
+
+state 58
+	rule_flush:  ATTRIBUTE_FLUSH ':' SIDE_SERVER.';' 
+
+	';'  shift 72
+	.  error
+
+
+state 59
+	rule_flush:  ATTRIBUTE_FLUSH ':' STRING.';' 
+
+	';'  shift 73
+	.  error
+
+
+state 60
+	rule_side:  ATTRIBUTE_SIDE ':' SIDE_SERVER ';'.    (21)
+
+	.  reduce 21 (src line 249)
+
+
+state 61
+	rule_side:  ATTRIBUTE_SIDE ':' SIDE_CLIENT ';'.    (22)
+
+	.  reduce 22 (src line 254)
+
+
+state 62
+	rule_side:  ATTRIBUTE_SIDE ':' STRING ';'.    (23)
+
+	.  reduce 23 (src line 259)
+
+
+state 63
+	rule_regex:  ATTRIBUTE_REGEX ':' STRING ';'.    (24)
+
+	.  reduce 24 (src line 269)
+
+
+state 64
+	rule_match:  ATTRIBUTE_MATCH ':' STRING ';'.    (28)
+
+	.  reduce 28 (src line 293)
+
+
+state 65
+	rule_match:  ATTRIBUTE_MATCH ':' STRING ','.NUMBER ';' 
+	rule_match:  ATTRIBUTE_MATCH ':' STRING ','.ATTRIBUTE_REPLACE ':' STRING ';' 
+	rule_match:  ATTRIBUTE_MATCH ':' STRING ','.NUMBER ',' ATTRIBUTE_REPLACE ':' STRING ';' 
+
+	NUMBER  shift 74
+	ATTRIBUTE_REPLACE  shift 75
+	.  error
+
+
+state 66
+	rule_skip:  ATTRIBUTE_SKIP ':' NUMBER ';'.    (32)
+
+	.  reduce 32 (src line 316)
+
+
+state 67
+	rule_state:  ATTRIBUTE_STATE ':' ATTRIBUTE_STATE_SET ','.WORDCHAR ';' 
+
+	WORDCHAR  shift 76
+	.  error
+
+
+state 68
+	rule_state:  ATTRIBUTE_STATE ':' ATTRIBUTE_STATE_UNSET ','.WORDCHAR ';' 
+
+	WORDCHAR  shift 77
+	.  error
+
+
+state 69
+	rule_state:  ATTRIBUTE_STATE ':' ATTRIBUTE_STATE_IS ','.WORDCHAR ';' 
+
+	WORDCHAR  shift 78
+	.  error
+
+
+state 70
+	rule_state:  ATTRIBUTE_STATE ':' ATTRIBUTE_STATE_NOT ','.WORDCHAR ';' 
+
+	WORDCHAR  shift 79
+	.  error
+
+
+state 71
+	rule_flush:  ATTRIBUTE_FLUSH ':' SIDE_CLIENT ';'.    (25)
+
+	.  reduce 25 (src line 275)
+
+
+state 72
+	rule_flush:  ATTRIBUTE_FLUSH ':' SIDE_SERVER ';'.    (26)
+
+	.  reduce 26 (src line 279)
+
+
+state 73
+	rule_flush:  ATTRIBUTE_FLUSH ':' STRING ';'.    (27)
+
+	.  reduce 27 (src line 283)
+
+
+state 74
+	rule_match:  ATTRIBUTE_MATCH ':' STRING ',' NUMBER.';' 
+	rule_match:  ATTRIBUTE_MATCH ':' STRING ',' NUMBER.',' ATTRIBUTE_REPLACE ':' STRING ';' 
+
+	';'  shift 80
+	','  shift 81
+	.  error
+
+
+state 75
+	rule_match:  ATTRIBUTE_MATCH ':' STRING ',' ATTRIBUTE_REPLACE.':' STRING ';' 
+
+	':'  shift 82
+	.  error
+
+
+state 76
+	rule_state:  ATTRIBUTE_STATE ':' ATTRIBUTE_STATE_SET ',' WORDCHAR.';' 
+
+	';'  shift 83
+	.  error
+
+
+state 77
+	rule_state:  ATTRIBUTE_STATE ':' ATTRIBUTE_STATE_UNSET ',' WORDCHAR.';' 
+
+	';'  shift 84
+	.  error
+
+
+state 78
+	rule_state:  ATTRIBUTE_STATE ':' ATTRIBUTE_STATE_IS ',' WORDCHAR.';' 
+
+	';'  shift 85
+	.  error
+
+
+state 79
+	rule_state:  ATTRIBUTE_STATE ':' ATTRIBUTE_STATE_NOT ',' WORDCHAR.';' 
+
+	';'  shift 86
+	.  error
+
+
+state 80
+	rule_match:  ATTRIBUTE_MATCH ':' STRING ',' NUMBER ';'.    (29)
+
+	.  reduce 29 (src line 297)
+
+
+state 81
+	rule_match:  ATTRIBUTE_MATCH ':' STRING ',' NUMBER ','.ATTRIBUTE_REPLACE ':' STRING ';' 
+
+	ATTRIBUTE_REPLACE  shift 87
+	.  error
+
+
+state 82
+	rule_match:  ATTRIBUTE_MATCH ':' STRING ',' ATTRIBUTE_REPLACE ':'.STRING ';' 
+
+	STRING  shift 88
+	.  error
+
+
+state 83
+	rule_state:  ATTRIBUTE_STATE ':' ATTRIBUTE_STATE_SET ',' WORDCHAR ';'.    (33)
+
+	.  reduce 33 (src line 321)
+
+
+state 84
+	rule_state:  ATTRIBUTE_STATE ':' ATTRIBUTE_STATE_UNSET ',' WORDCHAR ';'.    (34)
+
+	.  reduce 34 (src line 326)
+
+
+state 85
+	rule_state:  ATTRIBUTE_STATE ':' ATTRIBUTE_STATE_IS ',' WORDCHAR ';'.    (35)
+
+	.  reduce 35 (src line 331)
+
+
+state 86
+	rule_state:  ATTRIBUTE_STATE ':' ATTRIBUTE_STATE_NOT ',' WORDCHAR ';'.    (36)
+
+	.  reduce 36 (src line 336)
+
+
+state 87
+	rule_match:  ATTRIBUTE_MATCH ':' STRING ',' NUMBER ',' ATTRIBUTE_REPLACE.':' STRING ';' 
+
+	':'  shift 89
+	.  error
+
+
+state 88
+	rule_match:  ATTRIBUTE_MATCH ':' STRING ',' ATTRIBUTE_REPLACE ':' STRING.';' 
+
+	';'  shift 90
+	.  error
+
+
+state 89
+	rule_match:  ATTRIBUTE_MATCH ':' STRING ',' NUMBER ',' ATTRIBUTE_REPLACE ':'.STRING ';' 
+
+	STRING  shift 91
+	.  error
+
+
+state 90
+	rule_match:  ATTRIBUTE_MATCH ':' STRING ',' ATTRIBUTE_REPLACE ':' STRING ';'.    (30)
+
+	.  reduce 30 (src line 303)
+
+
+state 91
+	rule_match:  ATTRIBUTE_MATCH ':' STRING ',' NUMBER ',' ATTRIBUTE_REPLACE ':' STRING.';' 
+
+	';'  shift 92
+	.  error
+
+
+state 92
+	rule_match:  ATTRIBUTE_MATCH ':' STRING ',' NUMBER ',' ATTRIBUTE_REPLACE ':' STRING ';'.    (31)
+
+	.  reduce 31 (src line 308)
+
+
+29 terminals, 13 nonterminals
+37 grammar rules, 93/2000 states
+0 shift/reduce, 0 reduce/reduce conflicts reported
+62 working sets used
+memory: parser 53/30000
+0 extra closures
+100 shift entries, 1 exceptions
+19 goto entries
+27 entries saved by goto default
+Optimizer space used: output 92/30000
+92 table entries, 0 zero
+maximum spread: 29, maximum offset: 29

@@ -1,0 +1,1 @@
+alert (name:"test"; side:client; flush:server;)

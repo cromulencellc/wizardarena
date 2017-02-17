@@ -1,0 +1,6 @@
+<h2>Edit challenge binary</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: challenge_binary_path(@conn, :update, @challenge_binary) %>
+
+<%= link "Back", to: challenge_binary_path(@conn, :index) %>

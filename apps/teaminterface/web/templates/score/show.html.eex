@@ -1,0 +1,33 @@
+<h2>Show score</h2>
+
+<ul>
+
+  <li>
+    <strong>Team:</strong>
+    <%= @score.team_id %>
+  </li>
+
+  <li>
+    <strong>Round:</strong>
+    <%= @score.round_id %>
+  </li>
+
+  <li>
+    <strong>Security:</strong>
+    <%= @score.security %>
+  </li>
+
+  <li>
+    <strong>Availability:</strong>
+    <%= @score.availability %>
+  </li>
+
+  <li>
+    <strong>Evaluation:</strong>
+    <%= @score.evaluation %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: score_path(@conn, :edit, @score) %>
+<%= link "Back", to: score_path(@conn, :index) %>

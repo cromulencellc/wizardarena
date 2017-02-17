@@ -1,0 +1,84 @@
+body.con_dashboard #content
+  h1, h2, h3, h4, h5, h6
+    margin-top: 0
+    margin-bottom: 0
+
+  form
+    input[type='file']::-webkit-file-upload-button, input[type='submit'],
+    select
+      font-size: 2em
+    input[type='number']
+      font-size: 1em
+
+  table
+    th.group
+      border: solid black
+      border-width: 0 0 0 1px
+    .data
+      font-family: $mono_font
+
+body.con_dashboard.act_scoreboard table
+  font-size: 1.8em
+  td
+    padding: 0 1em
+  th
+    padding: 0 1em
+    text-align: left
+  td.score, th.score
+    text-align: right
+
+body.con_dashboard.act_index #content,
+body.con_dashboard.act_round #content .round_zero
+  .csets
+    @include span-columns(9)
+    .cset
+      @include outer-container
+      margin-bottom: 1em
+      p
+        margin-top: 0.2em
+        margin-bottom: 0.2em
+      .shortname:after
+        content: ":"
+      .cset_details
+        @include span-columns(3)
+      .cbs
+        @include span-columns(9)
+        @include omega
+  .round
+    @include span-columns(3)
+    .previously
+      h2
+        display: inline-block
+        margin: 0 auto
+      ol.recent_rounds
+        display: inline-block
+        list-style-type: none
+        padding-left: 0
+        li
+          display: inline-block
+
+body.con_dashboard.act_round #content
+  .round
+    @include outer-container
+    .replacements
+      @include span-columns(6)
+    .firewalls
+      @include span-columns(6)
+    .cb_feedbacks
+      @include span-columns(6)
+    .proof_feedbacks
+      @include span-columns(6)
+    .poll_feedbacks
+      @include span-columns(12)
+
+body.con_dashboard.act_challenge_set #content
+  .parts
+    @include span-columns(6)
+  .replace
+    @include span-columns(6)
+
+body.con_dashboard.act_challenge_binary #content
+  .versions
+    @include span-columns(6)
+  .replace
+    @include span-columns(6)

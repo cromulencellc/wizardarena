@@ -1,0 +1,383 @@
+#!/usr/bin/env python
+
+""" CB MASTER REPLAY
+
+Contains elements of CB-REPLAY and CB-REPLAY-POV
+
+"""
+
+import threading
+import glob
+import os
+import argparse
+import struct
+import subprocess
+import random
+import xml.etree.ElementTree as ET
+import prf
+import binascii
+import cb_replay
+import cb_replay_pov
+import time
+import traceback
+import socket
+
+MAX_THROWS = 10
+
+POLL_TIMEOUT_BACKOFF_RATE = 3
+POLL_TIMEOUT_BACKOFF_COUNT = 3
+
+class ReplayProcess(object):
+    def __init__( self, cmd ):
+        self.cmd = cmd
+        self.process = None
+
+    def RunProcess( self, timeout ):
+        def target():
+            self.process = subprocess.Popen( self.cmd, shell=False )
+            (self.process_stdout, self.process_stderr) = self.process.communicate()
+            self.process_returncode = self.process.returncode
+
+        thread = threading.Thread(target=target)
+        thread.start()
+
+        thread.join( timeout )
+        if thread.is_alive():
+            self.process.terminate()
+            thread.join()
+
+
+def main():
+    """ Parse and Throw the POVs """
+    parser = argparse.ArgumentParser(description='Run cb-replay or cb-replay-pov on a directory based on file type of directory')
+    required = parser.add_argument_group(title='required arguments')
+    required.add_argument('--host', required=True, type=str,
+                          help='IP address of CB server')
+    required.add_argument('--port', required=True, type=int,
+                          help='PORT of the listening CB')
+    required.add_argument('--poll_directory', required=True, type=str, 
+                          help='Directory containing XML poll files')
+    required.add_argument('--pov_directory', required=True, type=str, 
+                          help='Directory containing POV files')
+    required.add_argument('--throws', required=True, type=int,
+                          help='Maximum number of throws to send POV')
+    required.add_argument('--round_seed', required=True, type=str,
+                          help='Random string used for PRF expansion')
+    required.add_argument('--round_secret', required=True, type=str,
+                          help='Used as input for round secret')
+    required.add_argument('--round_label', required=True, type=str,
+                          help='Used as input for label for PRF expansion')
+    required.add_argument('--timeout', required=False, type=int, default=16,
+                          help='Timeout for poll')
+    required.add_argument("--max_pov_timeout", required=False, type=int, default=150,
+                          help='Maximum aggregate timeout for a POV')
+    required.add_argument("--split_start_pos", required=False, type=int, default=0,
+                          help='Split starting percentage position')
+    required.add_argument("--split_end_pos", required=False, type=int, default=100,
+                          help='Split ending percentage position')
+    """ 
+    parser.add_argument('--source_host', required=False, type=str, default='',
+                        help='Source IP address to use in connections')
+    parser.add_argument('--source_port', required=False, type=int,
+                        default=0, help='Source port to use in connections')
+    parser.add_argument('--concurrent', required=False, type=int, default=1,
+                        help='Number of Polls/POVs to throw concurrently')
+    parser.add_argument('--timeout', required=False, type=int, default=None,
+                        help='Connect timeout')
+    parser.add_argument('--failure_ok', required=False, action='store_true',
+                        default=False,
+                        help='Failures for this test are accepted')
+    parser.add_argument('--debug', required=False, action='store_true',
+                        default=False, help='Enable debugging output')
+    parser.add_argument('--max_send', required=False, type=int,
+                        help='Maximum amount of data in each send call')
+    parser.add_argument('--negotiate', required=False, action='store_true',
+                        default=False, help='The CB seed should be negotiated')
+    parser.add_argument('--cb_seed', required=False, type=str,
+                        help='Specify the CB Seed')
+    """
+
+    args = parser.parse_args()
+
+    if ( args.split_start_pos >= args.split_end_pos ):
+        raise Exception('Invalid split start position specified, value 0-100 is allowed')
+
+    if ( args.split_start_pos < 0 or args.split_start_pos > 100 ):
+        raise Exception('Invalid split start position specified, value 0-100 is allowed')
+
+    if ( args.split_end_pos < 0 or args.split_end_pos > 100 ):
+        raise Exception('Invalid split end position specified, value 0-100 is allowed')
+
+    if ( args.throws < 1 or args.throws > MAX_THROWS ):
+        raise Exception('Throws allowed is 1-%d' % MAX_THROWS)
+
+    pov_throw_count = args.throws
+
+    try:
+        round_secret = binascii.unhexlify( args.round_secret )
+    except binascii.Error:
+        raise Exception('Round secret must be a hex string')
+    except binascii.Incomplete:
+        raise Exception('Round secret must be a hex string')
+
+    if ( len(round_secret) < 48 ):
+        raise Exception('Round secret must be 48-bytes or larger')
+
+    try:
+        round_seed = binascii.unhexlify( args.round_seed )
+    except binascii.Error:
+        raise Exception('Round seed must be a hex string')
+    except binascii.Incomplete:
+        raise Exception('Rounds eed must be a hex string')
+
+    if ( len(round_seed) != 32 ):
+        raise Exception('Round seed must be 32-bytes')
+
+    # Get all files in a directory that are .XML
+    poll_list = []
+    for xml_file in glob.glob( args.poll_directory + "/*.[xX][mM][lL]" ):
+        poll_list.append( { "Name" : xml_file, "Type" : "xml" } )
+
+    poll_list = sorted( poll_list, key=lambda k: k['Name'] )
+
+    pov_count = 0
+
+    if ( args.pov_directory != "none" ):
+        pov_list = []
+        for pov_file in glob.glob( args.pov_directory + "/*.[pP][oO][vV]" ):
+            pov_count += 1
+
+            # Default to 1 for throw_count
+            throw_count = 1
+            throw_count_findpos = pov_file.find( "THROW" )
+            if ( throw_count_findpos > -1 ):
+                throw_count_endpos = pov_file.find( ".", throw_count_findpos )
+
+                throw_count = int(pov_file[throw_count_findpos+5:throw_count_endpos])
+
+            if ( throw_count > pov_throw_count ):
+                throw_count = pov_throw_count
+
+            pov_list.append( { "Name" : pov_file, "Type" : "pov", "ThrowCur": 1, "ThrowCount" : throw_count, "RunTimeTotal": 0 } )
+
+
+    pov_list = sorted( pov_list, key=lambda k: k['Name'] )
+
+    throw_list = []
+    for xml_file in poll_list:
+        throw_list.append( xml_file )
+
+    for pov_item in pov_list:
+        for i in range( pov_item["ThrowCount"] ):
+            throw_list.append( pov_item )
+
+    if ( len(throw_list) == 0 ):
+        raise Exception("No items to replay")
+
+    prf_data_length = (96 * len(throw_list)) + 4
+    print "PRF Data Length: %d\n" % prf_data_length
+
+    prf_random_data = prf.HKDF_HMAC_SHA512( round_secret, args.round_label + round_seed, prf_data_length )
+
+    random_order_seed = struct.unpack( 'L', prf_random_data[0:4] )[0]
+
+    print "Random order seed is: %08X\n" % random_order_seed
+    
+    # Seed random number generator with seed (generate predictable ordering)
+    random.seed( random_order_seed )
+   
+    # Build the throw index list
+    throw_index_list = range( len(throw_list) )
+
+    # Randomize the throw list
+    random.shuffle( throw_index_list )
+
+    # Next apply the args.split_start_pos and args.split_end_pos
+    throw_list_count = len(throw_index_list)
+
+    throw_position_start = int(throw_list_count * (args.split_start_pos / 100.0))
+    throw_position_end = int(throw_list_count * (args.split_end_pos / 100.0))
+
+    # Update the list to use the throw position's
+    print "THROW_POSITION_START=%d : THROW_POSITION_END=%d" % (throw_position_start, throw_position_end)
+
+    throw_index_list = throw_index_list[throw_position_start:throw_position_end]
+
+    # Calculate the cb_seed_pos to use
+    cb_seed_pos = 4+(96*throw_position_start)
+
+    # Setup Poll Results logging
+    #poll_result_handler = cb_replay.Results()
+
+    # Track run index
+    run_idx = 0
+
+    # Next track you poll timeout
+    poller_timeout_cur = args.timeout
+    poller_time = 0
+
+    # Wait for connection success to IDS
+    connect_success = False
+    while connect_success is False:
+        try:
+            sock = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
+            sock.connect( (args.host, args.port) )
+            sock.close()
+
+            connect_success = True
+        except Exception, e:
+            print "[[[SOCKET WASN'T READY, sleeping]]]"
+
+        time.sleep(1)
+
+  
+    # Wait for all the containers to be ready
+    time.sleep(2)
+
+    # Generate 
+    try:
+        for item_idx in throw_index_list:
+            pov_item = throw_list[item_idx]
+
+
+            if ( pov_item['Type'] == 'pov' ):
+                # Run cb-replay-pov
+                #print "cb-replay-pov: %s\n" % pov_item['Name']
+                #print "seed: %s\n" % binascii.hexlify( cb_seed )
+                #print "cb_seed_pos: %d\n" % cb_seed_pos
+                cb_seed = prf_random_data[cb_seed_pos:cb_seed_pos+48]
+                pov_seed = prf_random_data[cb_seed_pos+48:cb_seed_pos+96]
+                
+                cb_seed_pos += 96
+
+                # Get time (in seconds) remaining
+                pov_sec_total = pov_item['RunTimeTotal']
+
+                pov_sec_left = args.max_pov_timeout - pov_sec_total
+                if ( pov_sec_left > args.timeout ):
+                    pov_sec_left = args.timeout
+
+                if ( pov_sec_left <= 0 ):
+                    # TIMED OUT
+                    continue
+
+                print "[STARTPOV %d][%s][cb_seed=%s][pov_seed=%s][%d of %d]" % (run_idx, pov_item['Name'], binascii.hexlify(cb_seed), binascii.hexlify(pov_seed), pov_item['ThrowCur'], pov_item['ThrowCount'] )
+               
+                start_time = time.time()
+
+                try:
+                    pid, status = cb_replay_pov.run_pov( ('', 0), (args.host, args.port), pov_item['Name'], args.timeout, False, True, binascii.hexlify(cb_seed), None, 0, binascii.hexlify(pov_seed) )
+                except cb_replay_pov.TimeoutException as e:
+                    # Timed out
+                    print "[POV FAIL TIMEOUT]"     
+                except:
+                    # Likely failed due to connection
+                    print "[POV FAIL CONNECTION]"
+
+                end_time = time.time()
+
+                run_time = int(end_time - start_time)
+
+                print "[ENDPOV %d][RUNTIMESEC %d]\n" % (run_idx, run_time)
+
+                pov_item['RunTimeTotal'] += run_time
+                pov_item['ThrowCur'] += 1
+
+                # Advance to next index
+                run_idx += 1
+
+            elif ( pov_item['Type'] == 'xml' ):
+                # Run cb-replay
+
+                pov_xml_data = ''
+                with open( pov_item['Name'], 'rb') as pov_fh:
+                    pov_xml_data = pov_fh.read()
+
+                poll_args = (('', 0), (args.host, args.port), (pov_xml_data, pov_item['Name']), poller_timeout_cur, False, 0x1000, True, None )
+           
+                print "[STARTPOLL %d][FILE: %s]" % (run_idx, pov_item['Name'])
+
+                pov = cb_replay.POV(seed=None)
+
+                pov_parsed = True
+                try:
+                    with cb_replay.Timeout(30):
+                        pov.parse(pov_xml_data, filename=pov_item['Name'])
+                except cb_replay.TimeoutException:
+                    print "[POLL PARSE TIMEOUT]"
+                    pov_parsed = False
+                except cb_replay.ET.ParseError:
+                    print "[POLL PARSE ERROR]"
+                    pov_parsed = False
+
+                
+                if pov_parsed:
+                    pov_thrower = cb_replay.Throw( ('', 0), (args.host, args.port), pov, poller_timeout_cur, False, None, True ) 
+                    try:
+                        poll_start_time = time.time()
+                        with cb_replay.Timeout(poller_timeout_cur):
+                            pov_thrower.run()
+
+                        poll_end_time = time.time()
+
+                        print "# tests passed: %d" % pov_thrower.passed 
+                        print "# tests failed: %d" % pov_thrower.failed
+                    except cb_replay.TimeoutException:
+                        poll_end_time = time.time()
+                        print "# tests passed: %d" % pov_thrower.passed 
+                        print "# tests failed: %d" % pov_thrower.failed
+                        print "[POLL TIMEOUT]"
+                    except:
+                        poll_end_time = time.time()
+                        print "# tests passed: %d" % pov_thrower.passed 
+                        print "# tests failed: %d" % pov_thrower.failed
+                        print "[POLL FAILURE]"
+                else:
+                    poll_start_time = 0
+                    poll_end_time = 0
+
+                ''' OLD WAY
+                try:
+                    #poll_result_handler.cb_pov_result(cb_replay.run_pov(*poll_args))
+                    (thrower_passed, thrower_failed, thrower_logs) = cb_replay.run_pov(*poll_args)
+
+                    print "# tests passed: %d" % thrower_passed
+                    print "# tests failed: %d" % thrower_failed
+
+                except cb_replay.TestFailure as e: 
+                    print "[POLL TEST FAILURE - %s]" % repr(e)
+                except:
+                    # Likely failed due to a connection issue
+                    print "[POLL FAIL CONNECTION]"
+                '''
+
+
+                print "[ENDPOLL %d][%s][time=%f]\n" % (run_idx, pov_item['Name'], poll_end_time-poll_start_time)
+
+                # Accumulate poller time -- to back off in the event of multiple timeouts
+                poller_time += (poll_end_time-poll_start_time)
+
+                if poller_time > (poller_timeout_cur * POLL_TIMEOUT_BACKOFF_COUNT):
+                    poller_time = 0
+                    poller_timeout_cur -= POLL_TIMEOUT_BACKOFF_RATE
+
+                    # Don't go below 1 second
+                    if poller_timeout_cur < 1:
+                        poller_timeout_cur = 1
+
+                run_idx += 1
+
+            else:
+                raise Exception("Unknown item type -- not POV or XML" )
+
+
+    except KeyboardInterrupt:
+        print "# Process keyboard interrupted"
+    finally:
+        print "Finally"
+
+
+    return 0
+
+if __name__ == "__main__":
+    exit( main() )

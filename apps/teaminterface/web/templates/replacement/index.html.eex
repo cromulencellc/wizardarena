@@ -1,0 +1,74 @@
+<h2>Listing replacements</h2>
+
+<div class="utils">
+  <div class="pages">
+    <h2>Pages</h2>
+    <%= pagination_links @conn, @pagination, [], @symbolized_params %>
+  </div>
+
+  <div class="filters">
+    <h2>
+      Filters
+      <%= link "clear", to: replacement_path(@conn, :index), class: "clear" %>
+    </h2>
+    <%= filter_explainer @conn, @conn.params %>
+  </div>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Round</th>
+      <th>Team</th>
+      <th>Challenge set</th>
+      <th>Challenge binary</th>
+      <th>Size</th>
+      <th>Digest</th>
+      <th>Scoot?</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for replacement <- @replacements do %>
+    <tr>
+      <td>
+        <%= link(replacement.round_id, to: round_path(@conn, :show, replacement.round_id)) %>
+        <%= query @conn, "\u2208", round_id: replacement.round_id %>
+        <%= query @conn, "\u2209", not_round_id: replacement.round_id %>
+      </td>
+      <td>
+        <%= link(replacement.team.shortname, to: team_path(@conn, :show, replacement.team)) %>
+        <%= query @conn, "\u2208", team_id: replacement.team.id %>
+        <%= query @conn, "\u2209", not_team_id: replacement.team.id %>
+      </td>
+      <td>
+        <%= link(replacement.challenge_set.shortname, to: challenge_set_path(@conn, :show, replacement.challenge_set)) %>
+
+        <%= query @conn, "\u2208", challenge_set_id: replacement.challenge_set.id %>
+        <%= query @conn, "\u2209", not_challenge_set_id: replacement.challenge_set.id %>
+      </td>
+      <td>
+        <%= link(cbid(replacement.challenge_binary, replacement.challenge_set), to: challenge_binary_path(@conn, :show, replacement.challenge_binary)) %>
+        <%= query @conn, "\u2208", challenge_binary_id: replacement.challenge_binary.id %>
+        <%= query @conn, "\u2209", not_challenge_binary_id: replacement.challenge_binary.id %>
+      </td>
+      <td class="data">
+        <%= replacement.size %>
+        <%= query @conn, ">", size_gt: replacement.size %>
+        <%= query @conn, "<", size_lt: replacement.size %>
+      </td>
+      <td>
+        <%= digest replacement.digest %>
+        <%= query @conn, "\u2208", digest: replacement.digest %>
+        <%= query @conn, "\u2209", not_digest: replacement.digest %>
+      </td>
+      <td><%= replacement.scoot %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: replacement_path(@conn, :show, replacement), class: "btn btn-default btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>

@@ -1,0 +1,11 @@
+This requires the installation of:
+
+psycopg2 for connecting to the database:
+sudo apt-get install python-psycopg2
+
+python-dev for pycrypto
+sudo apt-get install python-dev
+
+pip install pycrypto
+
+sudo apt-get install numpy

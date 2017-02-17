@@ -1,0 +1,6 @@
+<h2>Edit challenge set alias</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: challenge_set_alias_path(@conn, :update, @challenge_set_alias) %>
+
+<%= link "Back", to: challenge_set_alias_path(@conn, :index) %>

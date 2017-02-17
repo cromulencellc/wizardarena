@@ -1,0 +1,28 @@
+.proof
+  %h1
+    Proof
+    = @proof.id
+  %h2
+    against
+    = @target.shortname
+    = @cset.shortname
+
+  .feedbacks
+    %h2 Feedback
+    %table
+      %thead
+        %tr
+          %th round
+          %th throw
+          %th success?
+      %tbody
+        - for fb <- @feedbacks do
+          %tr
+            %td= fb.round_id
+            %td= fb.throw
+            %td
+              - if fb.successful do
+                %strong success
+              - else
+                no:
+                = fb.error

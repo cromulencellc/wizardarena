@@ -1,0 +1,115 @@
+#!/bin/bash
+
+### BEGIN INIT INFO
+# Provides:          docker-daemon
+# Required-Start:    $local_fs $network $syslog
+# Required-Stop:     $local_fs $network $syslog
+# Should-Start:      $named
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Starts/Stops Docker Swarm Manager
+# Description:       Starts/Stops Docker Swarm Manager
+### END INIT INFO
+
+# What is this?
+DESC="Docker Daemon Service"
+PREFIX=/usr
+TCP_PORT=2375
+TCP_ADDR=0.0.0.0
+NAME=`basename $0`
+PID_FILE="/var/run/$NAME.pid"
+STDOUT_LOG="/var/log/$NAME.log"
+STDERR_LOG="/var/log/$NAME.err"
+USER=root
+
+DOCKER_DIRECTORY="/wa_storage/docker/agent1/"
+
+# Exit if required binaries are missing.
+[ -x $PREFIX/bin/docker   ] || exit 0
+
+. /lib/lsb/init-functions
+
+get_pid() {
+	cat "$PID_FILE"
+}
+
+is_running() {
+	[ -f "$PID_FILE" ] && ps `get_pid` > /dev/null 2>&1
+}
+
+# See how we were called.
+case "$1" in
+  start)
+	if is_running; then
+		echo "Already started"
+	else
+		echo "Starting Docker Daemon"
+
+		sudo -u "$USER" $PREFIX/bin/docker daemon -g $DOCKER_DIRECTORY -H tcp://$TCP_ADDR:$TCP_PORT >> "$STDOUT_LOG" 2>> "$STDERR_LOG" &
+
+		echo $! > "$PID_FILE"
+
+		if ! is_running; then
+			echo "Unable to start docker daemon"
+			exit 1
+		fi
+	fi
+		
+	;;
+
+  stop)
+	if is_running; then
+		echo -n "Stopping Docker Daemon..."
+		kill `get_pid`
+
+		for i in {1..10}
+		do
+			if ! is_running; then
+				break
+			fi
+	
+			echo -n "."
+			sleep 1
+		done
+		echo
+
+		if is_running; then
+			echo "Not stopped; may still be shutting down or failed during shutdown"
+			exit 1
+		else
+			echo "Stopped Docker Daemon"
+			if [ -f "$PID_FILE" ]; then
+				rm "$PID_FILE"
+			fi
+		fi
+	fi
+	;;
+
+  status)
+	if is_running; then
+		echo "Running"
+	else
+		echo "Stopped"
+		exit 1
+	fi
+	;;
+
+  restart)
+	$0 stop
+	if is_running; then
+		echo "Unable to stop, cannot restart"
+		exit 1
+	fi
+	$0 start	
+	;;
+
+  test)
+	echo $NAME
+	;;
+
+  *)
+	echo "Usage: $0 {start|stop|status|restart}"
+	exit 1
+	;;
+esac
+exit 0

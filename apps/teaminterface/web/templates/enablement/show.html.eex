@@ -1,0 +1,18 @@
+<h2>Show enablement</h2>
+
+<ul>
+
+  <li>
+    <strong>Round:</strong>
+    <%= @enablement.round_id %>
+  </li>
+
+  <li>
+    <strong>Challenge set:</strong>
+    <%= @enablement.challenge_set_id %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: enablement_path(@conn, :edit, @enablement) %>
+<%= link "Back", to: enablement_path(@conn, :index) %>

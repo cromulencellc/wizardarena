@@ -1,0 +1,62 @@
+<h1>Listing proofs</h1>
+
+<div class="utils">
+  <div class="pages">
+    <h2>Pages</h2>
+    <%= pagination_links @conn, @pagination, [], @symbolized_params %>
+  </div>
+
+  <div class="filters">
+    <h2>
+      Filters
+      <%= link "clear", to: proof_path(@conn, :index), class: "clear" %>
+    </h2>
+    <%= filter_explainer @conn, @conn.params %>
+  </div>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>rnd</th>
+      <th>Team</th>
+      <th>Challenge set</th>
+      <th>Target</th>
+      <th>Digest</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for proof <- @proofs do %>
+    <tr>
+      <td><%= proof.round_id %></td>
+      <td>
+        <%= link proof.team.shortname, to: team_path(@conn, :show, proof.team) %>
+        <%= query @conn, "\u2208", team_id: proof.team.id %>
+        <%= query @conn, "\u2209", not_team_id: proof.team.id %>
+      </td>
+      <td>
+        <%= link proof.challenge_set.shortname, to: challenge_set_path(@conn, :show, proof.challenge_set_id) %>
+        <%= query @conn, "\u2208", challenge_set_id: proof.challenge_set.id %>
+        <%= query @conn, "\u2209", not_challenge_set_id: proof.challenge_set.id %>
+      </td>
+      <td>
+        <%= link proof.target.shortname, to: team_path(@conn, :show, proof.target) %>
+        <%= query @conn, "\u2208", target_id: proof.target.id %>
+        <%= query @conn, "\u2209", not_target_id: proof.target.id %>
+      </td>
+      <td>
+        <%= digest proof.digest %>
+        <%= query @conn, "\u2208", digest: proof.digest %>
+        <%= query @conn, "\u2209", not_digest: proof.digest %>
+      </td>
+
+      <td class="text-right">
+        <%= link "Show", to: proof_path(@conn, :show, proof), class: "btn btn-default btn-xs" %>
+        <%= link "Feedbacks", to: proof_feedback_path(@conn, :index, proof_id: proof.id) %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>

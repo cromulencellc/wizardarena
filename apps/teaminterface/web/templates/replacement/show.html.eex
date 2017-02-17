@@ -1,0 +1,28 @@
+<h2>Show replacement</h2>
+
+<ul>
+
+  <li>
+    <strong>Team:</strong>
+    <%= @replacement.team_id %>
+  </li>
+
+  <li>
+    <strong>Round:</strong>
+    <%= @replacement.round_id %>
+  </li>
+
+  <li>
+    <strong>Challenge binary:</strong>
+    <%= @replacement.challenge_binary_id %>
+  </li>
+
+  <li>
+    <strong>Digest:</strong>
+    <%= @replacement.digest %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: replacement_path(@conn, :edit, @replacement) %>
+<%= link "Back", to: replacement_path(@conn, :index) %>

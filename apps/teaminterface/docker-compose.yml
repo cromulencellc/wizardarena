@@ -1,0 +1,20 @@
+version: '2'
+services:
+  db:
+    image: postgres:9.5.3
+    environment:
+      POSTGRES_USER: teaminterface
+      POSTGRES_PASSWORD: UvchobHac6
+  web:
+    build: .
+    command: mix phoenix.server
+    volumes:
+      - .:/apps/teaminterface
+    links:
+      - db
+    environment:
+      DATABASE_URL: ecto://teaminterface:UvchobHac6@db/teaminterface_dev
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db

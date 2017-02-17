@@ -1,0 +1,48 @@
+<h2>Show evaluation</h2>
+
+<ul>
+
+  <li>
+    <strong>Team:</strong>
+    <%= @evaluation.team_id %>
+  </li>
+
+  <li>
+    <strong>Round:</strong>
+    <%= @evaluation.round_id %>
+  </li>
+
+  <li>
+    <strong>Challenge set:</strong>
+    <%= @evaluation.challenge_set_id %>
+  </li>
+
+  <li>
+    <strong>Connect:</strong>
+    <%= @evaluation.connect %>
+  </li>
+
+  <li>
+    <strong>Success:</strong>
+    <%= @evaluation.success %>
+  </li>
+
+  <li>
+    <strong>Timeout:</strong>
+    <%= @evaluation.timeout %>
+  </li>
+
+  <li>
+    <strong>Time:</strong>
+    <%= @evaluation.time %>
+  </li>
+
+  <li>
+    <strong>Memory:</strong>
+    <%= @evaluation.memory %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: evaluation_path(@conn, :edit, @evaluation) %>
+<%= link "Back", to: evaluation_path(@conn, :index) %>

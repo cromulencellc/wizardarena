@@ -1,0 +1,1 @@
+block (name:"test"; match:"fo\x41 bar A41";)

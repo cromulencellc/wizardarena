@@ -1,0 +1,17 @@
+TO build run:
+
+docker run -it -v "$PWD":/mnt/src/ golang /bin/sh
+
+then type:
+export PATH=$PATH:/mnt/src/golang/packages/bin/
+export GOARCH=386
+
+then:
+cd /mnt/src/test_yacc/
+./build.sh
+
+should generate:
+ids_yacc
+
+As a statically compiled 32-bit binary
+

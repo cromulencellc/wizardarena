@@ -1,0 +1,1 @@
+alert (name:"hi mom"; state:is,mom; state:not,dad; state:set,dad; state:unset,mom;)

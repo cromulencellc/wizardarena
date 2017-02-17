@@ -1,0 +1,5 @@
+admit (name:"whenever we see server data, flush the client stream"; side:server; regex:".*"; flush:client;)
+# This is a test of comments!!!
+
+
+block (name:"too much \x4fdata without the server responding"; side:client; regex:".{65}";)

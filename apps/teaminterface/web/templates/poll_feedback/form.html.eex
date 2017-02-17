@@ -1,0 +1,53 @@
+<%= form_for @changeset, @action, fn f -> %>
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= label f, :wall_time, class: "control-label" %>
+    <%= number_input f, :wall_time, step: "any", class: "form-control" %>
+    <%= error_tag f, :wall_time %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :max_rss, class: "control-label" %>
+    <%= number_input f, :max_rss, class: "form-control" %>
+    <%= error_tag f, :max_rss %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :min_flt, class: "control-label" %>
+    <%= number_input f, :min_flt, class: "form-control" %>
+    <%= error_tag f, :min_flt %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :utime, class: "control-label" %>
+    <%= number_input f, :utime, step: "any", class: "form-control" %>
+    <%= error_tag f, :utime %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :task_clock, class: "control-label" %>
+    <%= number_input f, :task_clock, class: "form-control" %>
+    <%= error_tag f, :task_clock %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :cpu_clock, class: "control-label" %>
+    <%= number_input f, :cpu_clock, class: "form-control" %>
+    <%= error_tag f, :cpu_clock %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :status, class: "control-label" %>
+    <%= text_input f, :status, class: "form-control" %>
+    <%= error_tag f, :status %>
+  </div>
+
+  <div class="form-group">
+    <%= submit "Submit", class: "btn btn-primary" %>
+  </div>
+<% end %>

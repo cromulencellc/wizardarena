@@ -1,0 +1,57 @@
+.csets
+  %h1 Challenge Sets
+  - for cset <- @csets do
+    %article.cset{id: "cset-#{cset.id}"}
+      %h2
+        = link(to: dashboard_path(@conn, :challenge_set, csid(cset))) do
+          %span.shortname= cset.shortname
+          %span.name= cset.name
+          - end
+      .cset_details
+        %h3 firewall
+        - fw = Teaminterface.Firewall.cset_team(cset, @team)
+        %p
+          replaced
+          = ago fw.inserted_at
+        %p
+          during
+          = link "round #{fw.round_id}", to: dashboard_path(@conn, :round, fw.round_id)
+        %p
+          digest
+          = digest fw.digest
+        %p= link "firewall details", to: dashboard_path(@conn, :firewall, fw)
+      .cbs
+        %h3 binaries
+        %table
+          %thead
+            %tr
+              %th filename
+              %th digest
+              %th replaced
+              %th actions
+          %tbody
+            - for cb <- cset.challenge_binaries do
+              - cb = %{cb | challenge_set: cset}
+              - rep = Teaminterface.Replacement.cb_team(cb, @team)
+              %tr
+                %td= Teaminterface.ChallengeBinary.cbid(cb)
+                %td= digest rep.digest
+                %td
+                  = ago rep.inserted_at
+                  = link "round #{rep.round_id}", to: dashboard_path(@conn, :round, rep.round_id)
+                %td= link "replacement details", to: dashboard_path(@conn, :replacement, rep)
+
+.round
+  %h1
+    =link "Round #{@current_round.id}", to: dashboard_path(@conn, :round, @current_round.id)
+  %p
+    Started #{shift_ago @current_round.started_at}.
+    - if @current_round.finished_at do
+      Ended #{shift_ago @current_round.finished_at}.
+  .previously
+    %h2
+      Previously:
+    %ol.recent_rounds
+      - for round <- @recent_rounds do
+        %li= link "#{round.id}", to: dashboard_path(@conn, :round, round.id)
+    .all_rounds= link "all rounds", to: dashboard_path(@conn, :rounds)

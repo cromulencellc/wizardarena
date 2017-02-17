@@ -1,0 +1,24 @@
+%h1= "Show team #{@team.name}"
+
+%nav
+  %ul
+    %li= link "Edit", to: team_path(@conn, :edit, @team)
+    %li= link "All Teams", to: team_path(@conn, :index)
+
+%dl
+  %dt Name:
+  %dd= @team.name
+
+  %dt Shortname:
+  %dd= @team.shortname
+
+  %dt Displayname:
+  %dd= @team.displayname
+
+  %dt Color:
+  %dd= @team.color
+
+  %dt Score:
+  %dd
+    = score(@team)
+    = "(#{@team.score |> Float.round(4)})"

@@ -1,0 +1,23 @@
+<h2>Show round</h2>
+
+<ul>
+
+  <li>
+    <strong>Nickname:</strong>
+    <%= @round.nickname %>
+  </li>
+
+  <li>
+    <strong>Started at:</strong>
+    <%= @round.started_at %>
+  </li>
+
+  <li>
+    <strong>Finished at:</strong>
+    <%= @round.finished_at %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: round_path(@conn, :edit, @round) %>
+<%= link "Back", to: round_path(@conn, :index) %>
